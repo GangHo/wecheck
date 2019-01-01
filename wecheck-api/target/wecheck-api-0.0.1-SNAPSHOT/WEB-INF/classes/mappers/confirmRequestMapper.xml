@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.user.mapper.ConfirmRequestMapper">
+
+    <select id="getList" resultType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    	SELECT	*
+    	FROM	confirmRequest;
+    </select>
+    
+    <select id="get" parameterType="String" resultType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    	SELECT	*
+    	FROM	confirmRequest
+  		WHERE	confirmRequestID = #{confirmRequestID};
+    </select>
+    
+    <select id="getBySnsLoginID" parameterType="String" resultType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    	SELECT	*
+    	FROM	confirmRequest
+  		WHERE	snsLoginID = #{snsLoginID};
+    </select>
+    
+    <insert id="register" parameterType="org.afive.wecheck.user.bean.ConfirmRequestBean" useGeneratedKeys="true" keyProperty="confirmRequestID">
+    	INSERT INTO confirmRequest
+    		(snsLoginID, firstName, lastName, gender, regionID, unitID, birthDay, requestedTime)
+    	VALUES
+    		(#{snsLoginID}, #{firstName}, #{lastName}, #{gender}, #{regionID}, #{unitID}, #{birthDay}, now())
+    </insert>
+    
+    <update id="updateFileImage" parameterType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    	UPDATE confirmRequest
+    	SET profileImage = #{profileImage}
+    	WHERE confirmRequestID = #{confirmRequestID};
+    </update>
+    
+    <!-- <update id="update" parameterType="org.afive.wecheck.user.bean.UserBean">
+    	UPDATE	user
+    	SET		snsType = #{snsType},
+    			snsID = #{snsID},
+    			userType = #{userType},
+    			firstName = #{firstName},
+    			lastName = #{lastName},
+    			regionID = #{regionID},
+    			birthDay = #{birthDay},
+    			profileImage = #{profileImage}
+    	WHERE	userID = #{userID};
+    </update>
+    
+    <delete id="delete" parameterType="String">
+    	DELETE
+    	FROM	user
+    	WHERE	userID = #{userID};
+    </delete> -->
+</mapper>

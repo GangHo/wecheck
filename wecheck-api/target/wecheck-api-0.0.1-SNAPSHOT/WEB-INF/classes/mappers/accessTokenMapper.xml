@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.user.mapper.AccessTokenMapper">
+
+	<select id="getList"
+		resultType="org.afive.wecheck.user.bean.AccessTokenBean">
+		SELECT *
+		FROM accessToken;
+	</select>
+
+	<select id="get" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.AccessTokenBean">
+		SELECT *
+		FROM accessToken
+		WHERE accessTokenID = #{accessTokenID};
+	</select>
+
+	<insert id="register"
+		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		INSERT INTO accessToken
+			(accessTokenID, snsLoginID, uuid, deviceType, registeredTime)
+		VALUES
+		(
+		#{accessTokenID},
+		#{snsLoginID}, 
+		#{uuid},
+		#{deviceType},
+		#{registeredTime}
+		);
+		
+	</insert>
+	
+	<insert id="registerWithUserID"
+		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		INSERT INTO accessToken
+			(accessTokenID, snsLoginID, uuid, deviceType, registeredTime, userID)
+		VALUES
+		(
+		#{accessTokenID},
+		#{snsLoginID}, 
+		#{uuid},
+		#{deviceType},
+		#{registeredTime},
+		#{userID}
+		);
+		
+	</insert>
+	
+	<insert id="registerWithConfirmRequestID"
+		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		INSERT INTO accessToken
+			(accessTokenID, snsLoginID, uuid, deviceType, registeredTime, confirmRequestID)
+		VALUES
+		(
+		#{accessTokenID},
+		#{snsLoginID}, 
+		#{uuid},
+		#{deviceType},
+		#{registeredTime},
+		#{confirmRequestID}
+		);
+		
+	</insert>
+
+	<update id="update"
+		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		UPDATE fcm
+		SET isExpired=#{isExpired}
+		WHERE accessTokenID = #{accessTokenID};
+	</update>
+
+	<delete id="delete" parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		DELETE
+		FROM accessToken
+		WHERE snsLoginID = #{snsLoginID}
+		AND uuid = #{uuid}
+		AND deviceType = #{deviceType};
+	</delete>
+</mapper>

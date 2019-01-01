@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.churchService.ChurchServiceMapper">
+
+	<select id="getList" resultType="org.afive.wecheck.churchService.ChurchServiceBean">
+		SELECT	*
+		FROM churchService;
+	</select>
+
+    <select id="get" parameterType="String" resultType="org.afive.wecheck.churchService.ChurchServiceBean">
+    	SELECT	*
+    	FROM	churchService
+    	WHERE	churchServiceID = #{churchServiceID};
+    </select>
+    
+    <select id="checkChurchService" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
+  		SELECT *
+  		FROM churchService
+  		WHERE state = '0' and (now() between startTime and endTime);
+  	</select>
+  	
+  	<update id="changeStateReadyToRun">
+  		UPDATE churchService
+  		SET state = '1'
+  		WHERE state ='0' and (now() between startTime and endTime);
+  	</update>
+  	
+  	<select id='getChurchService' parameterType="String" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
+  		SELECT *
+		FROM churchService
+		WHERE (now() between startTime and endTime) and (regionID,unitID) IN(
+			SELECT regionID,unitID
+			FROM user
+			WHERE userID IN(
+				SELECT userID
+				FROM accessToken
+				WHERE accessTokenID = #{accessTokenID} ));
+  	</select>
+</mapper>

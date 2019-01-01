@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.user.mapper.FcmMapper">
+
+	<select id="getList"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT *
+		FROM fcm;
+	</select>
+
+	<select id="get" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT *
+		FROM fcm
+		WHERE fcmID = #{fcmID};
+	</select>
+	
+	<select id="getBySnsLoginID" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT *
+		FROM fcm
+		WHERE snsLoginID = #{snsLoginID};
+	</select>
+
+	<select id="getByDeviceTypeAndUuid"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT *
+		FROM fcm
+		WHERE deviceType = #{deviceType}
+		AND uuid = #{uuid};
+	</select>
+
+	<insert id="registerWithOutUserID"
+		parameterType="org.afive.wecheck.user.bean.FcmBean"
+		useGeneratedKeys="true" keyProperty="fcmID">
+		INSERT INTO fcm
+		(
+		snsLoginID, fcmToken, deviceType, uuid, fcmRegisteredTime)
+		VALUES
+		(
+		#{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, now());
+	</insert>
+	
+	<insert id="register"
+		parameterType="org.afive.wecheck.user.bean.FcmBean"
+		useGeneratedKeys="true" keyProperty="fcmID">
+		INSERT INTO fcm
+		( userID,
+		snsLoginID, fcmToken, deviceType, uuid, fcmRegisteredTime)
+		VALUES
+		(
+		#{userID}, #{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, now());
+	</insert>
+
+	<update id="update"
+		parameterType="org.afive.wecheck.user.bean.FcmBean">
+		UPDATE fcm
+		SET userID = #{userID},
+		snsLoginID =
+		#{snsLoginID},
+		fcmToken = #{fcmToken},
+		deviceType = #{deviceType},
+		uuid =
+		#{uuid},
+		fcmRegisteredTime = now()
+		WHERE fcmID = #{fcmID};
+	</update>
+
+	<delete id="delete" parameterType="String">
+		DELETE
+		FROM user
+		WHERE userID =
+		#{userID};
+	</delete>
+
+	<delete id="deleteIfExists"
+		parameterType="org.afive.wecheck.user.bean.FcmBean">
+		DELETE
+		FROM fcm
+	
+			WHERE
+				(deviceType=#{deviceType} AND uuid=#{uuid})
+				OR
+				fcmToken=#{fcmToken}
+				OR
+				snsLoginID=#{snsLoginID}
+	
+		;
+	</delete>
+
+</mapper>

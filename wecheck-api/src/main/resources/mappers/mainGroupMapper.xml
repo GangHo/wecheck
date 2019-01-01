@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.article.mapper.MainGroupMapper">
+
+	<!-- <select id="getList"
+		resultType="org.afive.wecheck.article.bean.ArticleBean">
+		SELECT *
+		FROM accessToken;
+	</select>
+
+	<select id="get" parameterType="String"
+		resultType="org.afive.wecheck.article.bean.ArticleBean">
+		SELECT *
+		FROM accessToken
+		WHERE accessTokenID = #{accessTokenID};
+	</select>
+
+	<insert id="register"
+		parameterType="org.afive.wecheck.article.bean.ArticleBean">
+		INSERT INTO accessToken
+			(accessTokenID, snsLoginID, uuid, deviceType, registeredTime)
+		VALUES
+		(
+		#{accessTokenID},
+		#{snsLoginID}, 
+		#{uuid},
+		#{deviceType},
+		#{registeredTime}
+		);
+		
+	</insert>
+
+	<update id="update"
+		parameterType="org.afive.wecheck.article.bean.ArticleBean">
+		UPDATE fcm
+		SET isExpired=#{isExpired}
+		WHERE accessTokenID = #{accessTokenID};
+	</update>
+
+	<delete id="delete" parameterType="org.afive.wecheck.article.bean.ArticleBean">
+		DELETE
+		FROM accessToken
+		WHERE snsLoginID = #{snsLoginID}
+		AND uuid = #{uuid}
+		AND deviceType = #{deviceType};
+	</delete> -->
+</mapper>
