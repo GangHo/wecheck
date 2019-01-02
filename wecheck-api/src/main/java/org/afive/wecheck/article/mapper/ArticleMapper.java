@@ -1,5 +1,9 @@
 package org.afive.wecheck.article.mapper;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.afive.wecheck.article.bean.ArticleBean;
 import org.afive.wecheck.common.CommonMapper;
 import org.afive.wecheck.user.bean.FcmBean;
@@ -11,7 +15,8 @@ public interface ArticleMapper extends CommonMapper<ArticleBean, String>{
 	/**
 	 * @return
 	 */
-	public FcmBean getByDeviceTypeAndUuid(@Param("deviceType") int deviceType, @Param("uuid") String uuid);
+	public List<ArticleBean> getList(@Param("privacy") int privacy,@Param("pageNo") int pageNo, @Param("size") int size);
+	public List<ArticleBean> getListFromArticleGroup(@Param("articleGroupID") int articleGroupID,@Param("privacy") int privacy,@Param("pageNo") int pageNo, @Param("size") int size);
 //	public FcmBean getBySnsLoginID(String snsLoginID);
 //	public void registerWithOutUserID(FcmBean fcmBean);
 //	public void register(FcmBean fcmBean);
