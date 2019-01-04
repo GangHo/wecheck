@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.afive.wecheck.article.bean.MainGroupResult;
 import org.afive.wecheck.article.mapper.ArticleGroupMapper;
+import org.afive.wecheck.article.mapper.ArticleMapper;
 import org.afive.wecheck.configuration.BaseTool;
 import org.afive.wecheck.configuration.MemberType;
 import org.afive.wecheck.configuration.ResponseCode;
@@ -43,6 +44,9 @@ public class ArticleGroupController {
 	@Autowired
 	private AccessTokenMapper accessTokenMapper;
 	
+	@Autowired
+	private ArticleMapper articleMapper;
+	
 	//테스트용	
 	@RequestMapping(value ="",method = RequestMethod.GET) 
 	private Map<String, Object> getMainGroupList(
@@ -58,6 +62,10 @@ public class ArticleGroupController {
 		}
 		
 		List<MainGroupResult> list = articleGroupMapper.getMainGroupList();
+		
+		for(int i=0;i<list.size();i++) {
+			list.get(i).setArticleList(articleMapper.getListFromArticleGroup(list.get(i).getArticleGroupID(), 0, 0, 3));
+		}
 		
 		result.put("groups", list);
 		result.put("responseCode", ResponseCode.SUCCESS);
