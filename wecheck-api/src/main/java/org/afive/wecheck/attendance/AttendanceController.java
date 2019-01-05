@@ -126,6 +126,8 @@ public class AttendanceController {
         	result.put("attendance", attendanceBean);
         	result.put("responseCode", String.valueOf(ResponseCode.SUCCESS));
         	
+        }else {
+        	result.put("responseCode", String.valueOf(ResponseCode.CHURCHSERVICE_FAILED));
         }
 		
 		return result;
