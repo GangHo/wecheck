@@ -14,6 +14,19 @@
     	FROM	attendance
     	WHERE	attendanceID = #{attendanceID};
     </select>
+    
+    <select id="getIfExists" resultType="org.afive.wecheck.attendance.AttendanceBean">
+    	SELECT	*
+    	FROM	attendance
+    	WHERE	churchServiceID = #{churchServiceID} AND userID = #{userID};
+    </select>
+    
+    <insert id="register" parameterType="org.afive.wecheck.attendance.AttendanceBean" useGeneratedKeys="true" keyProperty="attendanceID">
+    	INSERT INTO attendance 
+    		(churchServiceID, userID, attendanceTime)
+    	VALUES
+    		(#{churchServiceID}, #{userID}, now());
+    </insert>
   	  	
   	<select id="getAttendance" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceBean">
   		SELECT	*

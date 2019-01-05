@@ -18,5 +18,8 @@ public class ResponseCode {
 	public final static int FCM_UPDATE_SUCCESS = 11;
 	
 	public final static int CHURCHSERVICE_NULL = 20;
-	
+	public final static int CHURCHSERVICE_BEFORE = 21;
+	public final static int CHURCHSERVICE_FINISHED = 22;
+	public final static int CHURCHSERVICE_ALREADY_ATTENDED = 23;
+
 }
