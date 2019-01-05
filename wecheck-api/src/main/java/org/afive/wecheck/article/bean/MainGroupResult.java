@@ -1,10 +1,15 @@
 package org.afive.wecheck.article.bean;
 
+import java.util.List;
+
 public class MainGroupResult {
 	private int articleGroupID;
 	private String name;
 	private String iconImage;
 	private int order;
+	
+	List<ArticleBean> articleList;
+	
 	public int getArticleGroupID() {
 		return articleGroupID;
 	}
@@ -28,6 +33,12 @@ public class MainGroupResult {
 	}
 	public void setOrder(int order) {
 		this.order = order;
+	}
+	public List<ArticleBean> getArticleList() {
+		return articleList;
+	}
+	public void setArticleList(List<ArticleBean> articleList) {
+		this.articleList = articleList;
 	}
 	
 	
