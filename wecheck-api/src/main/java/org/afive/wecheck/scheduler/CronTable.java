@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class CronTable {
 	
 	@Autowired
@@ -37,7 +37,8 @@ public class CronTable {
 	@Autowired
 	FcmMapper fcmMapper;
 	
-	@Scheduled(cron = "59 * * * * *")
+//	@Scheduled(cron = "* 5 * * * SUN")
+	@Scheduled(cron = "* 5 * * * * ")
 	public void checkChurchService() {
 		/**
 		 * changeStateToEnd() -> state가 1인걸 2로 바꿔줌
