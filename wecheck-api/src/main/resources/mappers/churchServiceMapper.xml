@@ -15,27 +15,35 @@
     	WHERE	churchServiceID = #{churchServiceID};
     </select>
     
-    <select id="checkChurchService" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
-  		SELECT *
-  		FROM churchService
-  		WHERE state = '0' and (now() between startTime and endTime);
+    <select id="getChurchServiceList" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
+  		SELECT	*
+  		FROM	churchService
+  		WHERE	state = '0' and (now() between startTime and endTime);
   	</select>
   	
-  	<update id="changeStateReadyToRun">
-  		UPDATE churchService
-  		SET state = '1'
-  		WHERE state ='0' and (now() between startTime and endTime);
+  	<update id="changeStateToBegin">
+  		UPDATE	churchService
+  		SET		state = '1'
+  		WHERE	state ='0' and (now() between startTime and endTime);
+  	</update>
+  	
+  	<!--  '&gt;' 는 '>' 기호   -->
+  	<update id="changeStateToEnd">
+  		UPDATE	churchService
+  		SET		state = '2'
+  		WHERE	state = '1' and (now() &gt; endTime);
   	</update>
   	
   	<select id='getChurchService' parameterType="String" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
-  		SELECT *
-		FROM churchService
-		WHERE (now() between startTime and endTime) and (regionID,unitID) IN(
-			SELECT regionID,unitID
-			FROM user
-			WHERE userID IN(
+  		SELECT	*
+		FROM	churchService
+		WHERE	(now() between startTime and endTime) and (regionID,unitID) IN(
+			SELECT	regionID,unitID
+			FROM	user
+			WHERE	userID IN(
 				SELECT userID
 				FROM accessToken
 				WHERE accessTokenID = #{accessTokenID} ));
   	</select>
+  	
 </mapper>

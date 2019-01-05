@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.afive.wecheck.attendance.AttendanceBean;
+import org.afive.wecheck.attendance.AttendanceMapper;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.user.bean.AccessTokenBean;
 import org.afive.wecheck.user.mapper.AccessTokenMapper;
@@ -24,12 +26,15 @@ public class ChurchServiceController {
 	@Autowired
 	private AccessTokenMapper accessTokenMapper;
 	
+	@Autowired
+	private AttendanceMapper attendanceMapper;
+	
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public Map<String,Object> getList(){
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
-		result.put("data",churchServiceMapper.getList());
+		result.put("data",churchServiceMapper.getChurchServiceList());
 		return result;
 	}
 	
@@ -41,15 +46,40 @@ public class ChurchServiceController {
 		
 		AccessTokenBean accessTokenBean = accessTokenMapper.get(accessTokenID);
 		
+		/*-- accessToken이 유효하지 않은 경우 --*/
 		if(accessTokenBean==null) {
+			System.out.println("accessToken이 NULL이다.");
 			result.put("responseCode", String.valueOf(ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE));
 			return result;
 		}
+
+		ChurchServiceBean churchServiceBean = churchServiceMapper.getChurchService(accessTokenID);
 		
-		ChurchServiceBean churchServiceBean = new ChurchServiceBean();
+		/*-- 현재 예배시간이 아닌경우 --*/
+		if(churchServiceBean==null) {
+			result.put("churchService", null);
+			result.put("responseCode", ResponseCode.SUCCESS);
+			return result;
+		}
 		
-		churchServiceBean = churchServiceMapper.getChurchService(accessTokenID);
+		int userID = accessTokenBean.getUserID(); // accessToeknID로 뽑은 UserID
 		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("churchServiceID",churchServiceBean.getChurchServiceID());
+		
+		AttendanceBean attendanceBean = attendanceMapper.getAttendance(map);
+		
+		/*-- 예배시간이지만 출석을 하지 않은 경우 --*/
+		if(attendanceBean==null) {
+			result.put("attendance",null);
+			result.put("churchService", churchServiceBean);
+			result.put("responseCode",ResponseCode.SUCCESS);
+			return result;
+		}
+		
+		/*-- 출석을 한 경우 --*/
+		result.put("attendance",attendanceBean);
 		result.put("churchService",churchServiceBean);
 		result.put("responseCode",ResponseCode.SUCCESS);
 		
