@@ -4,8 +4,8 @@ public class ChurchServiceBean {
 	private int churchServiceID;
 	private int regionID;
 	private int unitID;
-	private int state;
 	private int adminUserID;
+	private int state;
 	private String startTime;
 	private String endTime;
 	private String registeredTime;

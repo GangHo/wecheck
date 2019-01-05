@@ -31,6 +31,13 @@
 		WHERE deviceType = #{deviceType}
 		AND uuid = #{uuid};
 	</select>
+	
+	<select id="getByUserID" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT	*
+		FROM	fcm
+		WHERE	userID = #{userID};
+	</select>
 
 	<insert id="registerWithOutUserID"
 		parameterType="org.afive.wecheck.user.bean.FcmBean"

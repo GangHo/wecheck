@@ -17,4 +17,6 @@ public class ResponseCode {
 	public final static int FCM_INSERT_SUCCESS = 10;
 	public final static int FCM_UPDATE_SUCCESS = 11;
 	
+	public final static int CHURCHSERVICE_NULL = 20;
+	
 }

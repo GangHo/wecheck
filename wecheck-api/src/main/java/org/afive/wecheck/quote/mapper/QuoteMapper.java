@@ -1,4 +1,4 @@
-package org.afive.wecheck.quote.mapper;
+ package org.afive.wecheck.quote.mapper;
 
 import org.afive.wecheck.common.CommonMapper;
 import org.afive.wecheck.quote.bean.QuoteBean;
