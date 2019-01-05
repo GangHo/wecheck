@@ -37,7 +37,7 @@ public class CronTable {
 	@Autowired
 	FcmMapper fcmMapper;
 	
-	@Scheduled(cron = "10 * * * * *")
+	@Scheduled(cron = "59 * * * * *")
 	public void checkChurchService() {
 		/**
 		 * changeStateToEnd() -> state가 1인걸 2로 바꿔줌
@@ -66,6 +66,8 @@ public class CronTable {
 				ChurchServiceBean churchServiceBean = null;
 				churchServiceBean = churchServiceList.get(i);
 				
+				System.out.println( churchServiceBean.getChurchServiceID());
+				
 				int regionID = churchServiceBean.getRegionID();
 				int unitID = churchServiceBean.getUnitID();
 				
@@ -92,25 +94,26 @@ public class CronTable {
 						 * 추가처리 필요
 						 */
 					}
-					
-					if(fcmBean.getDeviceType()==Data.DEVICE_TYPE_ANDROID) {
-						JSONObject data = new JSONObject();
-						data.put("title", title);
-						data.put("body", body);
+					else {
 						
-						jsonBody.put("data", data);
+						if(fcmBean.getDeviceType()==Data.DEVICE_TYPE_ANDROID) {
+							JSONObject data = new JSONObject();
+							data.put("title", title);
+							data.put("body", body);
+							
+							jsonBody.put("data", data);
+							
+						}else if(fcmBean.getDeviceType()==Data.DEVICE_TYPE_IOS) {
+							JSONObject notification=new JSONObject();
+							notification.put("title", title);
+							notification.put("body", body);
+							
+							jsonBody.put("notification", notification);
+							
+						}
 						
-					}else if(fcmBean.getDeviceType()==Data.DEVICE_TYPE_IOS) {
-						JSONObject notification=new JSONObject();
-						notification.put("title", title);
-						notification.put("body", body);
-						
-						jsonBody.put("notification", notification);
-						
+						tokenArray.put(fcmBean.getFcmToken());
 					}
-					
-					tokenArray.put(fcmBean.getFcmToken());
-					
 				}
 				
 				jsonBody.put("registration_ids", tokenArray);
@@ -143,11 +146,12 @@ public class CronTable {
 //					return result;
 				}
 				
+				/**
+				 * changeStateToBegin() -> state가 0이면서 예배시간인걸 state를 1로 바꿈
+				 */
+				churchServiceMapper.changeStateToBegin();
 			}
-			/**
-			 * changeStateToBegin() -> state가 0이면서 예배시간인걸 state를 1로 바꿈
-			 */
-			churchServiceMapper.changeStateToBegin();
+			
 		}
 	}
 }
