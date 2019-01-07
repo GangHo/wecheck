@@ -104,6 +104,8 @@ public class AttendanceController {
 		
 		// 미터(Meter) 단위
         double distanceMeter = BaseTool.distance(myLat, myLon, churchLat, churchLon, "meter");
+        
+        result.put("distance", distanceMeter);
 
         /*-- 10미터안에 존 --*/
         if(distanceMeter<10) {
@@ -127,7 +129,7 @@ public class AttendanceController {
         	result.put("responseCode", String.valueOf(ResponseCode.SUCCESS));
         	
         }else {
-        	result.put("responseCode", String.valueOf(ResponseCode.CHURCHSERVICE_FAILED));
+        	result.put("responseCode", String.valueOf(ResponseCode.CHURCHSERVICE_FAILED_TOO_FAR));
         }
 		
 		return result;

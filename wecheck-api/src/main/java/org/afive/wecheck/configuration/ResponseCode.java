@@ -21,6 +21,6 @@ public class ResponseCode {
 	public final static int CHURCHSERVICE_BEFORE = 21;
 	public final static int CHURCHSERVICE_FINISHED = 22;
 	public final static int CHURCHSERVICE_ALREADY_ATTENDED = 23;
-	public final static int CHURCHSERVICE_FAILED = 24;
+	public final static int CHURCHSERVICE_FAILED_TOO_FAR = 24;
 
 }
