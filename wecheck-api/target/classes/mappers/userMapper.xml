@@ -23,9 +23,10 @@
     </select>
     
     <select id="getIdByRegionAndUnit" parameterType="hashmap" resultType="String">
-    	SELECT	userID
-    	FROM	user
-    	WHERE	regionID = #{regionID}
+    	SELECT	user.userID
+    	FROM	user,fcm
+    	WHERE	user.userID = fcm.userID
+    	AND		regionID = #{regionID}
     	AND		unitID = #{unitID}	
     </select>
     

@@ -1,11 +1,10 @@
 package org.afive.wecheck.scheduler;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -25,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class CronTable {
 	
 	@Autowired
@@ -38,8 +37,9 @@ public class CronTable {
 	FcmMapper fcmMapper;
 	
 //	@Scheduled(cron = "* 5 * * * SUN")
-	@Scheduled(cron = "* 5 * * * * ")
+	@Scheduled(initialDelay = 10000, fixedDelay=300000)
 	public void checkChurchService() {
+		System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
 		/**
 		 * changeStateToEnd() -> state가 1인걸 2로 바꿔줌
 		 */
@@ -77,9 +77,8 @@ public class CronTable {
 				map.put("unitID",unitID);
 				
 				List<String> userIDList = null;
-				userIDList = userMapper.getIdByRegionAndUnit(map);
+				userIDList = userMapper.getIdByRegionAndUnit(map); 
 				
-//				List<String> fcmTokenList = new ArrayList<>();
 				JSONArray tokenArray = new JSONArray();
 				JSONObject jsonBody = new JSONObject();
 				

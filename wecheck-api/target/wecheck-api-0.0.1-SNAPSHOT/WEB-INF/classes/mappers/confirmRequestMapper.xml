@@ -28,9 +28,9 @@
     		(#{snsLoginID}, #{firstName}, #{lastName}, #{gender}, #{regionID}, #{unitID}, #{birthDay}, now())
     </insert>
     
-    <update id="updateFileImage" parameterType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    <update id="updateImageFile" parameterType="java.util.HashMap">
     	UPDATE confirmRequest
-    	SET profileImage = #{profileImage}
+    	SET crProfileImage = #{crProfileImage}
     	WHERE confirmRequestID = #{confirmRequestID};
     </update>
     

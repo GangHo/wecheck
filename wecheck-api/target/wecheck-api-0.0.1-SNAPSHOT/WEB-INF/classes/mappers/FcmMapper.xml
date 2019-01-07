@@ -16,14 +16,40 @@
 		FROM fcm
 		WHERE fcmID = #{fcmID};
 	</select>
+	
+	<select id="getBySnsLoginID" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT *
+		FROM fcm
+		WHERE snsLoginID = #{snsLoginID};
+	</select>
 
-	<select id="getByDeviceTypeAndUuid" resultType="org.afive.wecheck.user.bean.FcmBean">
+	<select id="getByDeviceTypeAndUuid"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
 		SELECT *
 		FROM fcm
 		WHERE deviceType = #{deviceType}
 		AND uuid = #{uuid};
 	</select>
+	
+	<select id="getByUserID" parameterType="String"
+		resultType="org.afive.wecheck.user.bean.FcmBean">
+		SELECT	*
+		FROM	fcm
+		WHERE	userID = #{userID};
+	</select>
 
+	<insert id="registerWithOutUserID"
+		parameterType="org.afive.wecheck.user.bean.FcmBean"
+		useGeneratedKeys="true" keyProperty="fcmID">
+		INSERT INTO fcm
+		(
+		snsLoginID, fcmToken, deviceType, uuid, fcmRegisteredTime)
+		VALUES
+		(
+		#{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, now());
+	</insert>
+	
 	<insert id="register"
 		parameterType="org.afive.wecheck.user.bean.FcmBean"
 		useGeneratedKeys="true" keyProperty="fcmID">
@@ -39,10 +65,12 @@
 		parameterType="org.afive.wecheck.user.bean.FcmBean">
 		UPDATE fcm
 		SET userID = #{userID},
-		snsLoginID = #{snsLoginID},
+		snsLoginID =
+		#{snsLoginID},
 		fcmToken = #{fcmToken},
 		deviceType = #{deviceType},
-		uuid = #{uuid},
+		uuid =
+		#{uuid},
 		fcmRegisteredTime = now()
 		WHERE fcmID = #{fcmID};
 	</update>
@@ -53,4 +81,20 @@
 		WHERE userID =
 		#{userID};
 	</delete>
+
+	<delete id="deleteIfExists"
+		parameterType="org.afive.wecheck.user.bean.FcmBean">
+		DELETE
+		FROM fcm
+	
+			WHERE
+				(deviceType=#{deviceType} AND uuid=#{uuid})
+				OR
+				fcmToken=#{fcmToken}
+				OR
+				snsLoginID=#{snsLoginID}
+	
+		;
+	</delete>
+
 </mapper>

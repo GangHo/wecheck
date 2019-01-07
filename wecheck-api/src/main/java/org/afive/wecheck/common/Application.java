@@ -32,9 +32,9 @@ public class Application extends SpringBootServletInitializer {
 		SpringApplication.run(Application.class, args);
 	}
 	
-	/* -- 단일 스레드인 경우 --*/
-	@Bean
-	public TaskScheduler taskScheduler() {
-		return new ConcurrentTaskScheduler();
-	}
+//	/* -- 단일 스레드인 경우 --*/
+//	@Bean
+//	public TaskScheduler taskScheduler() {
+//		return new ConcurrentTaskScheduler();
+//	}
 }
