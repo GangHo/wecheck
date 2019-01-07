@@ -13,5 +13,11 @@ public class Data {
 	
 	public static final int PUSH_IDX_ACCEPTED=1; //0에서1로 수정함
 	public static final int PUSH_IDX_DENIED=2; //1에서2로 수정함
+	
+	public static final int SERVICE_STATE_BEFORE=0;
+	public static final int SERVICE_STATE_STARTED=1;
+	public static final int SERVICE_STATE_FINISHED=2;
+	public static final int SERVICE_STATE_CANCELED=3;
+	
 
 }

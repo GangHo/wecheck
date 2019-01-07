@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.user.mapper.RegionMapper">
+
+	<select id="getList" resultType="org.afive.wecheck.user.bean.RegionBean">
+		SELECT	*
+		FROM region;
+	</select>
+
+    <select id="get" parameterType="String" resultType="org.afive.wecheck.user.bean.RegionBean">
+    	SELECT	*
+    	FROM	region
+    	WHERE	regionID = #{pk};
+    </select>
+  	  	
+  
+
+</mapper>
