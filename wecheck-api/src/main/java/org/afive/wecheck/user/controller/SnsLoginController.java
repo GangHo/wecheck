@@ -104,7 +104,7 @@ public class SnsLoginController {
 			//일단 있는지 확인 있으면 삭제		        
 			AccessTokenBean accessToken = BaseTool.createAccessToken(snsUserBean.getSnsLoginID(), uuid, deviceType);
 
-	        accessTokenMapper.delete(accessToken);
+	        accessTokenMapper.updateIfExists(accessToken);
 	        accessTokenMapper.register(accessToken);
 	        
 	        result.put("accessToken", accessToken.getAccessTokenID());
@@ -144,7 +144,7 @@ public class SnsLoginController {
 			//일단 있는지 확인 있으면 삭제		        
 			AccessTokenBean accessToken = BaseTool.createAccessToken(snsUserBean.getSnsLoginID(), uuid, deviceType);
 
-	        accessTokenMapper.delete(accessToken);
+	        accessTokenMapper.updateIfExists(accessToken);
 	        accessToken.setUserID(userLoginBean.getUserID());
 	        accessTokenMapper.registerWithUserID(accessToken);
 	        
@@ -175,7 +175,7 @@ public class SnsLoginController {
 			//일단 있는지 확인 있으면 삭제		        
 			AccessTokenBean accessToken = BaseTool.createAccessToken(snsUserBean.getSnsLoginID(), uuid, deviceType);
 
-	        accessTokenMapper.delete(accessToken);
+	        accessTokenMapper.updateIfExists(accessToken);
 	        accessToken.setConfirmRequestID(confirmRequestBean.getConfirmRequestID());
 	        accessTokenMapper.registerWithConfirmRequestID(accessToken);
 	        
@@ -202,7 +202,7 @@ public class SnsLoginController {
 		//일단 있는지 확인 있으면 삭제		        
 		AccessTokenBean accessToken = BaseTool.createAccessToken(snsUserBean.getSnsLoginID(), uuid, deviceType);
 
-        accessTokenMapper.delete(accessToken);
+        accessTokenMapper.updateIfExists(accessToken);
         accessTokenMapper.register(accessToken);
         
         result.put("accessToken", accessToken.getAccessTokenID());

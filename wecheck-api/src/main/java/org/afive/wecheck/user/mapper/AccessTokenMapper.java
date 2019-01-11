@@ -15,6 +15,9 @@ public interface AccessTokenMapper extends CommonMapper<AccessTokenBean, String>
 	public void registerWithUserID(AccessTokenBean accessTokenBean);
 	public void registerWithConfirmRequestID(AccessTokenBean accessTokenBean);
 	public void update(AccessTokenBean accessTokenBean);
-	public void delete(AccessTokenBean accessTokenBean);
+	
+	//새롭게 등록되었을때 accessToken에 confirmRequestID를 넣어줌
+	public void updateConfirmRequestID(AccessTokenBean accessTokenBean);
+	public void updateIfExists(AccessTokenBean accessTokenBean);
 	public AccessTokenBean get(String accessTokenID);
 }

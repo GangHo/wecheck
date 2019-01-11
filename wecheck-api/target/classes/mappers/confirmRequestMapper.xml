@@ -34,20 +34,20 @@
     	WHERE confirmRequestID = #{confirmRequestID};
     </update>
     
-    <!-- <update id="update" parameterType="org.afive.wecheck.user.bean.UserBean">
-    	UPDATE	user
-    	SET		snsType = #{snsType},
-    			snsID = #{snsID},
-    			userType = #{userType},
-    			firstName = #{firstName},
+    <update id="update" parameterType="org.afive.wecheck.user.bean.ConfirmRequestBean">
+    	UPDATE	confirmRequest
+    	SET   	firstName = #{firstName},
     			lastName = #{lastName},
+    			gender = #{gender},
     			regionID = #{regionID},
+    			unitID = #{unitID},
     			birthDay = #{birthDay},
-    			profileImage = #{profileImage}
-    	WHERE	userID = #{userID};
+    			isApproved = 3,
+    			requestedTime = now()
+    	WHERE	confirmRequestID = #{confirmRequestID};
     </update>
     
-    <delete id="delete" parameterType="String">
+    <!-- <delete id="delete" parameterType="String">
     	DELETE
     	FROM	user
     	WHERE	userID = #{userID};
