@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.like.mapper.ArticleLikeMapper">
+    
+    <select id="getByArticleID" parameterType="String" resultType = "org.afive.wecheck.like.bean.ArticleLikeBean">
+    	SELECT	*
+    	FROM	articleLike
+    	WHERE	articleID = #{articleID}
+    	AND		isChecked = 1;
+  	</select>
+  	
+  	<select id="getCountByArticleID" parameterType="int" resultType = "String">
+  		SELECT	COUNT(*)
+  		FROM	articleLike
+  		WHERE	articleID = #{articleID}
+  		AND		isChecked = 1; 
+  	</select>
+  	
+  	<select id="isCheckedByUserAndArticle" parameterType="hashmap"  resultType="java.lang.Integer">
+  		SELECT	1
+  		FROM	articleLike
+  		WHERE	userID = #{userID}
+  		AND		articleID = #{articleID};
+  	
+  	</select>
+</mapper>

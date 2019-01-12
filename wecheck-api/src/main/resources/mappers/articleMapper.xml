@@ -23,6 +23,12 @@
 		limit #{pageNo}, #{size}
 		;
 	</select>
+	
+	<select id="get" parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleBean">
+    	SELECT	*
+    	FROM	article
+  		WHERE	articleID = #{articleID};
+  	</select>
 
 	<!-- <select id="get" parameterType="String"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
