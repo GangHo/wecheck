@@ -22,5 +22,7 @@ public class ResponseCode {
 	public final static int CHURCHSERVICE_FINISHED = 22;
 	public final static int CHURCHSERVICE_ALREADY_ATTENDED = 23;
 	public final static int CHURCHSERVICE_FAILED_TOO_FAR = 24;
+	
+	public final static int ACCESS_DENIED_USERID_DOESNT_MATCH = 302;
 
 }
