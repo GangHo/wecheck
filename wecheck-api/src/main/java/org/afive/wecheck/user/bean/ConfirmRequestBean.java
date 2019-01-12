@@ -27,18 +27,13 @@ public class ConfirmRequestBean {
 		super();
 	}
 	
-	public ConfirmRequestBean(int confirmRequestID, int snsLoginID, String firstName, String lastName, int gender, int regionID, int unitID,
-			String birthDay) {
-		super();
-		this.confirmRequestID=confirmRequestID;
-		this.snsLoginID = snsLoginID;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.gender = gender;
-		this.regionID = regionID;
-		this.unitID = unitID;
-		this.birthDay = birthDay;
-		
+	public void updateValues(String firstName, String lastName, int gender, int regionID, int unitID,String birthDay) {
+		this.firstName=firstName;
+		this.lastName=lastName;
+		this.gender=gender;
+		this.regionID=regionID;
+		this.unitID=unitID;
+		this.birthDay=birthDay;
 	}
 	
 	public ConfirmRequestBean(int snsLoginID, String firstName, String lastName, int gender, int regionID, int unitID,

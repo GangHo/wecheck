@@ -40,7 +40,7 @@ public class ConfirmRequestController {
 					@RequestParam("regionID")String intRegionID,
 					@RequestParam("unitID")String intUnitID,
 					@RequestParam("birthDay")String birthDay,
-					@RequestParam("profileImage")MultipartFile profileImageFile
+					@RequestParam(value="profileImage", required=false)MultipartFile profileImageFile
 					) {
 				
 		int gender= Integer.parseInt(intGender);
@@ -72,8 +72,11 @@ public class ConfirmRequestController {
 		
 		//confirmRequest가 존재하
 		if(confirmRequestID>0) {
-			confirmRequestBean=new ConfirmRequestBean(confirmRequestID, accessTokenBean.getSnsLoginID(), firstName, lastName, gender, regionID, unitID, birthDay);
+			confirmRequestBean=confirmRequestMapper.get(confirmRequestID+"");
+			confirmRequestBean.updateValues(firstName, lastName, gender, regionID, unitID, birthDay);
 			confirmRequestMapper.update(confirmRequestBean);
+			
+			System.out.println("confirmRequest 수정, confirmRequestID : "+accessTokenBean.getConfirmRequestID());
 			
 			MultipartFile imageFile = profileImageFile;
 			
@@ -81,8 +84,12 @@ public class ConfirmRequestController {
 			if(!imageFile.isEmpty()) {
 				FileService fs = new FileService();
 				
+				
 				//원래 프사 있는지 확인
 				if(confirmRequestBean.getCrProfileImage()!=null && confirmRequestBean.getCrProfileImage().length()>0) {
+					
+					System.out.println("원래 있던 프사 지울거에염! 프사 경로 : "+confirmRequestBean.getCrProfileImage());
+					
 					if(fs.fileDelete(confirmRequestBean.getCrProfileImage())) {
 						System.out.println("삭제성공");
 					}else {
@@ -104,7 +111,7 @@ public class ConfirmRequestController {
 
 					
 					confirmRequestMapper.updateImageFile(inputMap);
-					confirmRequestBean.setCrProfileImage("http://www.we-check.org"+fileBean.getFilePath());
+					confirmRequestBean.setCrProfileImage(fileBean.getFilePath());
 					
 					result.put("confirmRequest", confirmRequestBean);
 			
@@ -133,7 +140,7 @@ public class ConfirmRequestController {
 			confirmRequestMapper.register(confirmRequestBean);
 			
 			
-			System.out.println("confirmRequest 등록했다, 아이디 : "+confirmRequestBean.getConfirmRequestID());
+			System.out.println("confirmRequest 새로 등 아이디 : "+confirmRequestBean.getConfirmRequestID());
 			
 			accessTokenBean.setConfirmRequestID(confirmRequestBean.getConfirmRequestID());
 			accessTokenMapper.updateConfirmRequestID(accessTokenBean);
@@ -155,7 +162,7 @@ public class ConfirmRequestController {
 
 					
 					confirmRequestMapper.updateImageFile(inputMap);
-					confirmRequestBean.setCrProfileImage("http://www.we-check.org"+fileBean.getFilePath());
+					confirmRequestBean.setCrProfileImage(fileBean.getFilePath());
 					
 					result.put("confirmRequest", confirmRequestBean);
 			
