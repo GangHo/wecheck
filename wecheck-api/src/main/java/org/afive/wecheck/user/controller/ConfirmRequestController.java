@@ -40,7 +40,7 @@ public class ConfirmRequestController {
 					@RequestParam("regionID")String intRegionID,
 					@RequestParam("unitID")String intUnitID,
 					@RequestParam("birthDay")String birthDay,
-					@RequestParam("profileImage")MultipartFile profileImageFile
+					@RequestParam(value="profileImage", required=false)MultipartFile profileImageFile
 					) {
 				
 		int gender= Integer.parseInt(intGender);
