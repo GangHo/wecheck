@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.like.mapper.CommentLikeMapper">
+    
+    <select id="getByArticleID" parameterType="String" resultType = "org.afive.wecheck.like.bean.CommentLikeBean">
+    	SELECT	*
+    	FROM	commentLike
+    	WHERE	commentID = #{commentID}
+    	AND		isChecked = 1;
+  	</select>
+  	
+  	<select id="getCountByCommentID" parameterType="String" resultType = "String">
+  		SELECT	COUNT(*)
+  		FROM	commentLike
+  		WHERE	commentID = #{commentID}
+  		AND		isChecked = 1; 
+  	</select>
+  	
+	<select id="isCheckedByUserAndComment" parameterType="hashmap"  resultType="java.lang.Integer">
+  		SELECT	commentLike.isChecked
+  		FROM	commentLike
+  		WHERE	userID = #{userID}
+  		AND		commentID = #{commentID}
+  	</select>
+  	
+  	<insert id="register" parameterType="org.afive.wecheck.like.bean.CommentLikeBean">
+  		INSERT INTO commentLike
+  			(userID, commentID, isChecked)
+  		VALUES
+			(#{userID},#{commentID},#{isChecked});
+  	
+  	</insert>
+  	
+  	<update id="updateIsChecked" parameterType="hashmap">
+  		UPDATE	commentLike
+  		SET		isChecked = #{isChecked}
+  		WHERE	userID = #{userID}
+  		AND		commentID = #{commentID}
+  	</update>
+ 
+</mapper>

@@ -19,5 +19,16 @@ public class Data {
 	public static final int SERVICE_STATE_FINISHED=2;
 	public static final int SERVICE_STATE_CANCELED=3;
 	
+	/**
+	 * created by gangho
+	 */
+	public final static int COMMENT_PARENT_SIZE = 15; // 댓글 페이징시 불러오는 크기
+	public final static int COMMENT_CHILD_SIZE = 20; // 대댓글 페이징시 불러오는 크기
+	public final static Integer COMMENT_PARENTID_DEFAULT = 0; // 추후에 null로 할꺼면 NULL로 변경
+	public final static int ARTICLE_STATE_DELETED = 1;
+	public final static int COMMENT_STATE_DELETED = 1;
+	
+	public final static int COMMENTLIKE_DEFAULT = 0;
+	public final static int COMMENTLIKE_CHECKED = 1;
 
 }

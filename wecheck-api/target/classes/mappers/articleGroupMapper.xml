@@ -11,6 +11,13 @@
 		INNER JOIN mainGroup B on A.articleGroupID = B.articleGroupID
 		ORDER by B.order ASC;
 	</select>
+	
+	<select id="get" parameterType="String"
+		resultType="org.afive.wecheck.article.bean.ArticleGroupBean">
+		SELECT	*
+		FROM	articleGroup
+		WHERE	articleGroupID = #{articleGroupID};	
+	</select>
 
 	<!-- <select id="getList"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">

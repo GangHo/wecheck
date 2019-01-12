@@ -18,7 +18,8 @@
     <select id="getChurchServiceList" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
   		SELECT	*
   		FROM	churchService
-  		WHERE	state = '0' and (now() between startTime and endTime);
+  		WHERE	(state = '0')
+  		AND		(now() between startTime and endTime);
   	</select>
   	
   	<update id="changeStateToBegin">

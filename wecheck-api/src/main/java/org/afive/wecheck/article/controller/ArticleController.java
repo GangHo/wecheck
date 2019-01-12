@@ -78,6 +78,7 @@ public class ArticleController {
 		int privacy = Integer.parseInt(privacyStr);
 		int articleGroupID=Integer.parseInt(articleGroupIDstr);
 		
+		
 		pageNo=((pageNo-1)*size);
 		
 		List<ArticleBean> articleList;
