@@ -9,4 +9,6 @@ public interface ArticleLikeMapper extends CommonMapper<ArticleLikeBean,String>{
 	
 	public String getCountByArticleID(int articleID);
 	public Integer isCheckedByUserAndArticle(HashMap<String,Object> map);
+	public void registerArticleLike(ArticleLikeBean articleLikeBean);
+	public void updateArticleLike(ArticleLikeBean articleLikeBean);
 }

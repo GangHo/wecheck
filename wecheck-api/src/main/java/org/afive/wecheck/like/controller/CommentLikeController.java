@@ -61,15 +61,16 @@ public class CommentLikeController {
 		Integer isChecked = commentLikeMapper.isCheckedByUserAndComment(map);
 		
 		if(isChecked == null) {
-			commentLikeMapper.registerIsChecked(commentLikeBean);
+			commentLikeBean.setIsChecked(Data.COMMENTLIKE_CHECKED);
+			commentLikeMapper.registerCommentLike(commentLikeBean);
 		}
 		else if(isChecked == 0) {
 			commentLikeBean.setIsChecked(Data.COMMENTLIKE_CHECKED);
-			commentLikeMapper.updateIsChecked(commentLikeBean);
+			commentLikeMapper.updateCommentLike(commentLikeBean);
 		}
 		else {
 			commentLikeBean.setIsChecked(Data.COMMENTLIKE_DEFAULT);
-			commentLikeMapper.updateIsChecked(commentLikeBean);
+			commentLikeMapper.updateCommentLike(commentLikeBean);
 		}
 		
 		result.put("commentLike", commentLikeBean);

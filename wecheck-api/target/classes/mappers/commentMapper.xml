@@ -56,7 +56,7 @@
   		FROM	comment
   		WHERE	(parentID = '0'
   		AND		articleID = #{articleID} )
-  		Order by	commentID
+  		Order by	commentID 
   		LIMIT	#{start},#{size};
   	</select>
   	
@@ -65,7 +65,7 @@
   		FROM	comment
   		WHERE	(parentID = #{parentID}
   		AND		articleID = #{articleID})
-  		Order by	commentID desc
+  		Order by	commentID 
   		LIMIT	#{start},#{size};
   	
   	</select>

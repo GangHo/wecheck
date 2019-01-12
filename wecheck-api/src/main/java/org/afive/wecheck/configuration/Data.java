@@ -30,5 +30,8 @@ public class Data {
 	
 	public final static int COMMENTLIKE_DEFAULT = 0;
 	public final static int COMMENTLIKE_CHECKED = 1;
+	
+	public final static int ARTICLELIKE_DEFAULT = 0;
+	public final static int ARTICLELIKE_CHECKED = 1;
 
 }

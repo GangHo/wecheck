@@ -19,10 +19,24 @@
   	</select>
   	
   	<select id="isCheckedByUserAndArticle" parameterType="hashmap"  resultType="java.lang.Integer">
-  		SELECT	1
+  		SELECT	articleLike.isChecked
   		FROM	articleLike
   		WHERE	userID = #{userID}
   		AND		articleID = #{articleID};
-  	
   	</select>
+  	
+  	<insert id="registerArticleLike" parameterType="org.afive.wecheck.like.bean.ArticleLikeBean">
+  		INSERT INTO articleLike
+  			(userID, articleID, isChecked)
+  		VALUES
+			(#{userID},#{articleID},#{isChecked});
+  	
+  	</insert>
+  	
+  	<update id="updateArticleLike" parameterType="org.afive.wecheck.like.bean.ArticleLikeBean">
+  		UPDATE	articleLike
+  		SET		isChecked = #{isChecked}
+  		WHERE	userID = #{userID}
+  		AND		articleID = #{articleID};
+  	</update>
 </mapper>

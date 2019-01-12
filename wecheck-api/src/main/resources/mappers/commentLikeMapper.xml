@@ -25,7 +25,7 @@
   		AND		commentID = #{commentID}
   	</select>
   	
-  	<insert id="register" parameterType="org.afive.wecheck.like.bean.CommentLikeBean">
+  	<insert id="registerCommentLike" parameterType="org.afive.wecheck.like.bean.CommentLikeBean">
   		INSERT INTO commentLike
   			(userID, commentID, isChecked)
   		VALUES
@@ -33,7 +33,7 @@
   	
   	</insert>
   	
-  	<update id="updateIsChecked" parameterType="hashmap">
+  	<update id="updateCommentLike" parameterType="hashmap">
   		UPDATE	commentLike
   		SET		isChecked = #{isChecked}
   		WHERE	userID = #{userID}

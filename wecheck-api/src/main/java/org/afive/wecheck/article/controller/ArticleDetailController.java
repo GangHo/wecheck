@@ -12,6 +12,7 @@ import org.afive.wecheck.article.mapper.ArticleGroupMapper;
 import org.afive.wecheck.article.mapper.ArticleMapper;
 import org.afive.wecheck.comment.bean.CommentBean;
 import org.afive.wecheck.comment.mapper.CommentMapper;
+import org.afive.wecheck.configuration.Data;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.bean.ArticleLikeBean;
 import org.afive.wecheck.like.mapper.ArticleLikeMapper;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "detail")
+@RequestMapping(value = "article")
 public class ArticleDetailController {
 	
 	@Autowired
@@ -70,13 +71,19 @@ public class ArticleDetailController {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
+		/*
+		 * article 상태에 대한 처리
+		 */
 		ArticleBean articleBean = articleMapper.get(articleID);
-		
-		/*-- article Data --*/
 		if(articleBean == null) {
-			System.out.println("ARTICLE IS NULL. 불러오기 실패");
-			result.put("responseCode", String.valueOf(ResponseCode.FAILED_NO_MATCH));
-			return result;
+			System.out.println("article누르려는데 articleID : " + articleID + "인 article이 없다");
+			result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+		}
+		
+		int articleState = articleBean.getState();
+		if(articleState == Data.ARTICLE_STATE_DELETED) {
+			System.out.println("article 누르려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
+			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
 		}
 
 		result.put("article", articleBean);
