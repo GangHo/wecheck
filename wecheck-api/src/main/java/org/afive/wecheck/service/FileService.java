@@ -50,12 +50,23 @@ public class FileService {
     }
     
     public boolean fileDelete(String filePath) {
+    	
+    	System.out.println("fileDelete에 들어옴 받은 파일 경로 : "+filePath);
     	boolean check = false;
-//    	filePath = filePath.replace("http://www.we-check.org", "");
-    	File file = new File(filePath);
-    	if(file.exists()) {
-    		check = file.delete();
+    	
+    	filePath=filePath.replace("http://we-check.org", "");
+    	filePath="/usr/local/tomcat"+filePath;
+    	
+    	System.out.println("path 변경시킴 : "+filePath);
+    	File file2 = new File(filePath);
+    	if(file2.exists()) {
+    		System.out.println("파일 존재합니당");
+    		check = file2.delete();
+    	}else {
+    		System.out.println("파일 존재 안하구");
     	}
+    	
+    	System.out.println("지웠는지 결과값 : "+check);
     	return check;
     }
 }
