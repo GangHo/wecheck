@@ -48,4 +48,14 @@ public class FileService {
 
         return null;
     }
+    
+    public boolean fileDelete(String filePath) {
+    	boolean check = false;
+//    	filePath = filePath.replace("http://www.we-check.org", "");
+    	File file = new File(filePath);
+    	if(file.exists()) {
+    		check = file.delete();
+    	}
+    	return check;
+    }
 }

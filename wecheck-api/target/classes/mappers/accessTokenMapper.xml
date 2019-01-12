@@ -14,7 +14,8 @@
 		resultType="org.afive.wecheck.user.bean.AccessTokenBean">
 		SELECT *
 		FROM accessToken
-		WHERE accessTokenID = #{accessTokenID};
+		WHERE accessTokenID = #{accessTokenID}
+		AND isExpired=0;
 	</select>
 
 	<insert id="register"
@@ -27,7 +28,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		#{registeredTime}
+		now()
 		);
 		
 	</insert>
@@ -42,7 +43,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		#{registeredTime},
+		now(),
 		#{userID}
 		);
 		
@@ -58,7 +59,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		#{registeredTime},
+		now(),
 		#{confirmRequestID}
 		);
 		
@@ -66,8 +67,15 @@
 
 	<update id="update"
 		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
-		UPDATE fcm
+		UPDATE accessToken
 		SET isExpired=#{isExpired}
+		WHERE accessTokenID = #{accessTokenID};
+	</update>
+	
+	<update id="updateConfirmRequestID"
+		parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		UPDATE accessToken
+		SET confirmRequestID=#{confirmRequestID}
 		WHERE accessTokenID = #{accessTokenID};
 	</update>
 
@@ -77,5 +85,18 @@
 		WHERE snsLoginID = #{snsLoginID}
 		AND uuid = #{uuid}
 		AND deviceType = #{deviceType};
+	</delete>
+	
+	<delete id="updateIfExists" parameterType="org.afive.wecheck.user.bean.AccessTokenBean">
+		UPDATE accessToken
+		SET isExpired=1
+		WHERE isExpired = 0
+		AND 
+		(
+		snsLoginID = #{snsLoginID}
+		OR (uuid = #{uuid}
+			AND deviceType = #{deviceType}
+			)
+		);
 	</delete>
 </mapper>

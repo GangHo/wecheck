@@ -64,53 +64,128 @@ public class ConfirmRequestController {
 		
 		System.out.println("accessToken 잘 있다."+accessTokenBean.getAccessTokenID());
 		
-		ConfirmRequestBean confirmRequestBean=new ConfirmRequestBean(accessTokenBean.getSnsLoginID(), firstName, lastName, gender, regionID, unitID, birthDay);
+		int confirmRequestID=accessTokenBean.getConfirmRequestID();
 		
-		System.out.println("confirmRequest 객체 생성..!");
+		System.out.println("confirmRequestID : "+confirmRequestID);
 		
-		confirmRequestMapper.register(confirmRequestBean);
+		ConfirmRequestBean confirmRequestBean;
 		
-		System.out.println("confirmRequest 등록했다, 아이디 : "+confirmRequestBean.getConfirmRequestID());
-		
-		MultipartFile imageFile = profileImageFile;
-		
-		if(!imageFile.isEmpty()) {
+		//confirmRequest가 존재하
+		if(confirmRequestID>0) {
+			confirmRequestBean=new ConfirmRequestBean(confirmRequestID, accessTokenBean.getSnsLoginID(), firstName, lastName, gender, regionID, unitID, birthDay);
+			confirmRequestMapper.update(confirmRequestBean);
 			
-			System.out.println("imageFile들어있다.");
+			MultipartFile imageFile = profileImageFile;
 			
-			System.out.println("파일명 : " + imageFile.getOriginalFilename());
-			FileService fs = new FileService();
-			try {
-				FileBean fileBean = fs.fileUpload(imageFile, FilePathResource.PROFILE_IMAGE_PATH, String.valueOf(confirmRequestBean.getConfirmRequestID()));
+			//사진을 새로 넣은 경
+			if(!imageFile.isEmpty()) {
+				FileService fs = new FileService();
 				
-				Map<String, String> inputMap = new HashMap<String, String>();
-				inputMap.put("confirmRequestID", String.valueOf(confirmRequestBean.getConfirmRequestID()));
-				inputMap.put("crProfileImage", fileBean.getFilePath());
+				//원래 프사 있는지 확인
+				if(confirmRequestBean.getCrProfileImage()!=null && confirmRequestBean.getCrProfileImage().length()>0) {
+					if(fs.fileDelete(confirmRequestBean.getCrProfileImage())) {
+						System.out.println("삭제성공");
+					}else {
+						System.out.println("삭제 실패");
+					}
+					
+				}
+				
+				System.out.println("imageFile들어있다.");
+				
+				System.out.println("파일명 : " + imageFile.getOriginalFilename());
+				
+				try {
+					FileBean fileBean = fs.fileUpload(imageFile, FilePathResource.PROFILE_IMAGE_PATH, String.valueOf(confirmRequestBean.getConfirmRequestID()));
+					
+					Map<String, String> inputMap = new HashMap<String, String>();
+					inputMap.put("confirmRequestID", String.valueOf(confirmRequestBean.getConfirmRequestID()));
+					inputMap.put("crProfileImage", fileBean.getFilePath());
 
+					
+					confirmRequestMapper.updateImageFile(inputMap);
+					confirmRequestBean.setCrProfileImage("http://www.we-check.org"+fileBean.getFilePath());
+					
+					result.put("confirmRequest", confirmRequestBean);
+			
+					result.put("responseCode", ResponseCode.SUCCESS);
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					result.put("confirmRequest", confirmRequestBean);
+					
+					result.put("responseCode", ResponseCode.FAILED_FILE_UPLOAD);
+			
+					
+					new ResponseEntity<Object>(confirmRequestBean, HttpStatus.NO_CONTENT); 
+				}
 				
-				confirmRequestMapper.updateImageFile(inputMap);
-				confirmRequestBean.setCrProfileImage("http://www.we-check.org"+fileBean.getFilePath());
-				
+			}else {
+				result.put("responseCode", result.put("responseCode", ResponseCode.FAILED_FILE_NOT_FOUND));
 				result.put("confirmRequest", confirmRequestBean);
-		
-				result.put("responseCode", ResponseCode.SUCCESS);
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				result.put("confirmRequest", confirmRequestBean);
-				
-				result.put("responseCode", ResponseCode.FAILED_FILE_UPLOAD);
-				
-				new ResponseEntity<Object>(confirmRequestBean, HttpStatus.NO_CONTENT); 
 			}
 			
+			System.out.println("confirmRequest 객체 생성..!");
+			
+			
 		}else {
-			result.put("responseCode", result.put("responseCode", ResponseCode.FAILED_FILE_NOT_FOUND));
-		}
+			confirmRequestBean=new ConfirmRequestBean(accessTokenBean.getSnsLoginID(), firstName, lastName, gender, regionID, unitID, birthDay);
+			confirmRequestMapper.register(confirmRequestBean);
+			
+			
+			System.out.println("confirmRequest 등록했다, 아이디 : "+confirmRequestBean.getConfirmRequestID());
+			
+			accessTokenBean.setConfirmRequestID(confirmRequestBean.getConfirmRequestID());
+			accessTokenMapper.updateConfirmRequestID(accessTokenBean);
+			
+			MultipartFile imageFile = profileImageFile;
+			
+			if(!imageFile.isEmpty()) {
+				
+				System.out.println("imageFile들어있다.");
+				
+				System.out.println("파일명 : " + imageFile.getOriginalFilename());
+				FileService fs = new FileService();
+				try {
+					FileBean fileBean = fs.fileUpload(imageFile, FilePathResource.PROFILE_IMAGE_PATH, String.valueOf(confirmRequestBean.getConfirmRequestID()));
+					
+					Map<String, String> inputMap = new HashMap<String, String>();
+					inputMap.put("confirmRequestID", String.valueOf(confirmRequestBean.getConfirmRequestID()));
+					inputMap.put("crProfileImage", fileBean.getFilePath());
+
+					
+					confirmRequestMapper.updateImageFile(inputMap);
+					confirmRequestBean.setCrProfileImage("http://www.we-check.org"+fileBean.getFilePath());
+					
+					result.put("confirmRequest", confirmRequestBean);
+			
+					result.put("responseCode", ResponseCode.SUCCESS);
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					result.put("confirmRequest", confirmRequestBean);
+					
+					result.put("responseCode", ResponseCode.FAILED_FILE_UPLOAD);
+					
+					new ResponseEntity<Object>(confirmRequestBean, HttpStatus.NO_CONTENT); 
+				}
+				
+			}else {
+				result.put("responseCode", result.put("responseCode", ResponseCode.FAILED_FILE_NOT_FOUND));
+			}
+			
+			System.out.println("confirmRequest 객체 생성..!");
+			
+			
+		}		
+		
+		
 		
 		
 		return result;
+		
 	}
+	
 	
 	
 	

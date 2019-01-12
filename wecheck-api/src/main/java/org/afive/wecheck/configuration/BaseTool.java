@@ -13,11 +13,11 @@ public class BaseTool {
 	}
 
 	public static AccessTokenBean createAccessToken(int snsLoginID, String uuid, int deviceType) {
-		
-		String token = snsLoginID+"yo"+uuid+"yo"+deviceType+"yoman";
+		Long currentTime=System.currentTimeMillis();
+		String token = currentTime+snsLoginID+"y"+uuid+"o"+deviceType+"yoman";
 		
 	    byte[] encodedBytes = Base64.getEncoder().encode(token.getBytes());
-	    Long currentTime=System.currentTimeMillis();
+	    
 	    
 	    String str=new String(encodedBytes, Charset.forName("UTF-8"));
 	    str+="secretttttKeyDaYoooou!";
@@ -29,7 +29,7 @@ public class BaseTool {
         accessToken.setSnsLoginID(snsLoginID);
         accessToken.setUuid(uuid);
         accessToken.setDeviceType(deviceType);
-        accessToken.setRegisteredTime(currentTime);
+  
         
         
 	    return accessToken;

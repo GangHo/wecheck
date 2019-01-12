@@ -6,7 +6,7 @@ public class AccessTokenBean {
 	private int snsLoginID;
 	private int deviceType;
 	private String uuid;
-	private Long registeredTime;
+	private String registeredTime;
 	private int isExpired;
 	private int userID;
 	private int confirmRequestID;
@@ -36,10 +36,10 @@ public class AccessTokenBean {
 		this.uuid = uuid;
 	}
 	
-	public Long getRegisteredTime() {
+	public String getRegisteredTime() {
 		return registeredTime;
 	}
-	public void setRegisteredTime(Long registeredTime) {
+	public void setRegisteredTime(String registeredTime) {
 		this.registeredTime = registeredTime;
 	}
 	public int getIsExpired() {

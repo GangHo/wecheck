@@ -21,10 +21,6 @@ public class ResponseCode {
 	public final static int CHURCHSERVICE_BEFORE = 21;
 	public final static int CHURCHSERVICE_FINISHED = 22;
 	public final static int CHURCHSERVICE_ALREADY_ATTENDED = 23;
-	public final static int CHURCHSERVICE_FAILED = 24;
-	
-	/*
-	 * 본인 게시물에 대한 접근가능 여부
-	 */
-	public final static int ACCESS_DENIED_USERID_DOESNT_MATCH = 31;
+	public final static int CHURCHSERVICE_FAILED_TOO_FAR = 24;
+
 }
