@@ -7,8 +7,10 @@ public class ArticleBean {
 	private int userID;
 	private int articleGroupID;
 	private int privacy;
+	private int state;
 	private String postedDate;
 	private String lastEditedDate;
+	private String deletedTime;
 	private String contents;
 	private int regionID;
 	private int unitID;
@@ -71,6 +73,18 @@ public class ArticleBean {
 	}
 	public void setUnitID(int unitID) {
 		this.unitID = unitID;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
+	public String getDeletedTime() {
+		return deletedTime;
+	}
+	public void setDeletedTime(String deletedTime) {
+		this.deletedTime = deletedTime;
 	}
 	
 	

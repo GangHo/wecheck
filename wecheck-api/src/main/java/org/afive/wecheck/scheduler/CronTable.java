@@ -95,11 +95,14 @@ public class CronTable {
 						 */
 					}
 					else {
-						
+						int pushType = Data.PUSH_TYPE_CHURCHSERVICE;
+						int idx = churchServiceBean.getChurchServiceID();
 						if(fcmBean.getDeviceType()==Data.DEVICE_TYPE_ANDROID) {
 							JSONObject data = new JSONObject();
 							data.put("title", title);
 							data.put("body", body);
+							data.put("pushType", String.valueOf(pushType));
+							data.put("idx", String.valueOf(idx));
 							
 							jsonBody.put("data", data);
 							
@@ -107,6 +110,8 @@ public class CronTable {
 							JSONObject notification=new JSONObject();
 							notification.put("title", title);
 							notification.put("body", body);
+							notification.put("pushType", String.valueOf(pushType));
+							notification.put("idx", String.valueOf(idx));
 							
 							jsonBody.put("notification", notification);
 							

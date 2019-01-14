@@ -24,4 +24,10 @@ public class ResponseCode {
 	public final static int CHURCHSERVICE_FAILED_TOO_FAR = 24;
 
 	public final static int ACCESS_DENIED_USERID_DOESNT_MATCH = 302;
+	
+	public final static int ARTICLE_STATE_DELETED = 30;
+	public final static int COMMENT_STATE_DELETED = 31;
+	
+	public final static int COMFIRMREQUESTID_IS_NULL = 61;
+	public final static int USER_IS_NOT_APPROVED = 62;
 }

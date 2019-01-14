@@ -18,7 +18,8 @@
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
 		SELECT *
 		FROM article
-		where (articleGroupID=#{articleGroupID} AND #{privacy} >= privacy)
+		WHERE (articleGroupID=#{articleGroupID} AND #{privacy} >= privacy
+		AND state = 0)
 		order by postedDate desc
 		limit #{pageNo}, #{size}
 		;

@@ -3,6 +3,9 @@ package org.afive.wecheck.like.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.afive.wecheck.article.bean.ArticleBean;
+import org.afive.wecheck.comment.bean.CommentBean;
+import org.afive.wecheck.comment.mapper.CommentMapper;
 import org.afive.wecheck.configuration.Data;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.bean.CommentLikeBean;
@@ -23,6 +26,9 @@ public class CommentLikeController {
 	
 	@Autowired
 	AccessTokenMapper accessTokenMapper;
+	
+	@Autowired
+	CommentMapper commemtMapper;
 	
 	@Autowired
 	CommentLikeMapper commentLikeMapper;
@@ -48,6 +54,19 @@ public class CommentLikeController {
 			System.out.println("userID 없는 사람이 commentID : "+commentID+" 에 Like시도");
 			result.put("responseCode", ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE);
 			return result;
+		}
+		
+		
+		CommentBean commentBean = commemtMapper.get(commentID);
+		if(commentBean == null) {
+			System.out.println("commentLike 누르려는데commentID : " + commentID + "인 comment가 없다");
+			result.put("responseCode", ResponseCode.COMMENT_STATE_DELETED);
+		}
+		
+		int commentState = commentBean.getState();
+		if(commentState != Data.COMMENT_STATE_DEFAULT) {
+			System.out.println("articleLike 누르려는데 articleID : " + commentID + "인 article은 state 가 default가 아님");
+			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
 		}
 
 		CommentLikeBean commentLikeBean = new CommentLikeBean();

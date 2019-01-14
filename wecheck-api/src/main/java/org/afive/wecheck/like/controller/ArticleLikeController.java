@@ -3,6 +3,8 @@ package org.afive.wecheck.like.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.afive.wecheck.article.bean.ArticleBean;
+import org.afive.wecheck.article.mapper.ArticleMapper;
 import org.afive.wecheck.configuration.Data;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.bean.ArticleLikeBean;
@@ -25,7 +27,7 @@ public class ArticleLikeController {
 	AccessTokenMapper accessTokenMapper;
 	
 	@Autowired
-	CommentLikeMapper commentLikeMapper;
+	ArticleMapper articleMapper;
 	
 	@Autowired
 	ArticleLikeMapper articleLikeMapper;
@@ -51,6 +53,21 @@ public class ArticleLikeController {
 			System.out.println("userID 없는 사람이 articleID : "+articleID+" 에 Like시도");
 			result.put("responseCode", ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE);
 			return result;
+		}
+		
+		/*
+		 * article 상태에 대한 처리
+		 */
+		ArticleBean articleBean = articleMapper.get(articleID);
+		if(articleBean == null) {
+			System.out.println("articleLike 누르려는데 articleID : " + articleID + "인 article이 없다");
+			result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+		}
+		
+		int articleState = articleBean.getState();
+		if(articleState == Data.ARTICLE_STATE_DELETED) {
+			System.out.println("articleLike 누르려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
+			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
 		}
 		
 		ArticleLikeBean articleLikeBean = new ArticleLikeBean();

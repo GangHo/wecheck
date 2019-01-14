@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "detail")
+@RequestMapping(value = "article")
 public class ChildCommentController {
 
 	@Autowired
@@ -48,12 +48,12 @@ public class ChildCommentController {
 	@Autowired
 	CommentLikeMapper commentLikeMapper;
 	
-	@RequestMapping(value ="/{articleID}/parents/{parentID}/childs/{pageNo}",method = RequestMethod.GET)
+	@RequestMapping(value ="/{articleID}/parents/{parentID}/childs",method = RequestMethod.GET)
 	private Map<String,Object> getParentComment(
 			@RequestHeader("Authorization") String accessTokenID ,
 			@PathVariable(value = "articleID") String articleID ,
 			@PathVariable(value = "parentID") String parentID ,
-			@PathVariable(value = "pageNo") String pageNoStr){
+			@RequestParam(value = "pageNo") String pageNoStr){
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -64,7 +64,7 @@ public class ChildCommentController {
 			return result;
 		}
 		
-		/**
+		/*
 		 * 필요없으면 삭제
 		 */
 		/*-- 접근하는 유저가 승인된 사람인지 아닌지 --*/
@@ -73,16 +73,20 @@ public class ChildCommentController {
 			Integer confirmRequestID = accessTokenBean.getConfirmRequestID();
 
 			if( confirmRequestID == null || confirmRequestID == 0) {
-				result.put("userIsApproved", null);
+				result.put("isApproved", null);
+				result.put("responseCode", ResponseCode.COMFIRMREQUESTID_IS_NULL);
+				return result;
 			}
 			else {
 				ConfirmRequestBean crBean = confirmRequestMapper.get(Integer.toString(confirmRequestID));
-				result.put("userIsApproved", crBean.getIsApproved());
+				result.put("isApproved", crBean.getIsApproved());
+				result.put("responseCode", ResponseCode.USER_IS_NOT_APPROVED);
+				return result;
 			}
 		}
-		else {
-			result.put("userIsApproved",1);
-		}
+//		else {	// 승인받아 userID가 있는경우
+//			result.put("isApproved",1);
+//		}
 		
 		int pageNo=Integer.parseInt(pageNoStr);
 		int start=((pageNo-1)* Data.COMMENT_CHILD_SIZE);
@@ -152,11 +156,11 @@ public class ChildCommentController {
 	/**
 	 * insert에 대한 POST요청
 	 */
-	@RequestMapping(value ="/{articleID}/parents/{parentID}/childs",method = RequestMethod.POST)
+	@RequestMapping(value ="/{articleID}/parents/{parentID}/childs/insert",method = RequestMethod.POST)
 	private Map<String,Object> setParentComment(
 			@RequestHeader("Authorization") String accessTokenID ,
 			@PathVariable(value = "articleID") String articleID ,
-			@RequestParam("parentID") String parentID ,
+			@PathVariable("parentID") String parentID ,
 			@RequestParam("contents") String contents ) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();

@@ -81,8 +81,8 @@ public class ArticleDetailController {
 		}
 		
 		int articleState = articleBean.getState();
-		if(articleState == Data.ARTICLE_STATE_DELETED) {
-			System.out.println("article 누르려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
+		if(articleState != Data.ARTICLE_STATE_DEFAULT) {
+			System.out.println("article 누르려는데 articleID : " + articleID + "인 article state가 default가 아님");
 			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
 		}
 
@@ -102,15 +102,19 @@ public class ArticleDetailController {
 
 			if( confirmRequestID == null || confirmRequestID == 0) {
 				result.put("isApproved", null);
+				result.put("responseCode", ResponseCode.COMFIRMREQUESTID_IS_NULL);
+				return result;
 			}
 			else {
 				ConfirmRequestBean crBean = confirmRequestMapper.get(Integer.toString(confirmRequestID));
 				result.put("isApproved", crBean.getIsApproved());
+				result.put("responseCode", ResponseCode.USER_IS_NOT_APPROVED);
+				return result;
 			}
 		}
-		else {
-			result.put("isApproved",1);
-		}
+//		else {	// 승인받아 userID가 있는경우
+//			result.put("isApproved",1);
+//		}
 
 		HashMap<String,Object> map = new HashMap<>();
 		map.put("userID",userID);
@@ -126,8 +130,9 @@ public class ArticleDetailController {
 		int articleGroupID = articleBean.getArticleGroupID();
 		ArticleGroupBean articleGroupBean = articleGroupMapper.get(String.valueOf(articleGroupID));
 		
+		//return 값으로 group정보까지 넘길 경우 주석 해제
 //		result.put("articleGroupID", articleGroupID);
-		result.put("articleGroupName", articleGroupBean.getName());
+//		result.put("articleGroupName", articleGroupBean.getName());
 		
 
 		UserBean publisherBean = userMapper.get(String.valueOf(articleBean.getUserID()));
@@ -163,10 +168,12 @@ public class ArticleDetailController {
 		result.put("articleFilePath",articleFiles);
 		
 		String articleLikeCount = articleLikeMapper.getCountByArticleID(articleBean.getArticleID());
-		result.put("articleLikeCount",articleLikeCount);
+		result.put("likeCount",articleLikeCount);
 
 		String commentCount = commentMapper.getTotalCountByArticleID(articleID);
 		result.put("commentCount",commentCount);
+		
+		result.put("responseCode", ResponseCode.SUCCESS);
 		
 		return result;
 		
