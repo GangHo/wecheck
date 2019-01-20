@@ -15,9 +15,10 @@
     	WHERE	quoteID = #{quoteID};
     </select>
     
-    <select id="getRandomQuote" parameterType="String" resultType = "org.afive.wecheck.quote.bean.QuoteBean">
-  		SELECT *
-  		FROM quote
+    <select id="getRandomQuote" resultType = "org.afive.wecheck.quote.bean.QuoteBean">
+  		SELECT	*
+  		FROM	quote
+  		WHERE 	state='0'
   		ORDER BY RAND()
   		LIMIT 1; 
   	</select>

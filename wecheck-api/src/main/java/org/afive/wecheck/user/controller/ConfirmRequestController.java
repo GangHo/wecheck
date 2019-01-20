@@ -1,5 +1,7 @@
 package org.afive.wecheck.user.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,10 +72,20 @@ public class ConfirmRequestController {
 		
 		ConfirmRequestBean confirmRequestBean;
 		
+		/**
+    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+    	 */
+    	String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		
 		//confirmRequest가 존재하
 		if(confirmRequestID>0) {
 			confirmRequestBean=confirmRequestMapper.get(confirmRequestID+"");
 			confirmRequestBean.updateValues(firstName, lastName, gender, regionID, unitID, birthDay);
+			
+			/**
+	    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+	    	 */
+			confirmRequestBean.setRequestedTime(localDateTime);
 			confirmRequestMapper.update(confirmRequestBean);
 			
 			System.out.println("confirmRequest 수정, confirmRequestID : "+accessTokenBean.getConfirmRequestID());
@@ -142,6 +154,11 @@ public class ConfirmRequestController {
 			
 		}else {
 			confirmRequestBean=new ConfirmRequestBean(accessTokenBean.getSnsLoginID(), firstName, lastName, gender, regionID, unitID, birthDay);
+			/**
+	    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+	    	 */
+			confirmRequestBean.setRequestedTime(localDateTime);
+			
 			confirmRequestMapper.register(confirmRequestBean);
 			
 			

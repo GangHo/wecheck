@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.afive.wecheck.banner.mapper.BannerMapper;
 import org.afive.wecheck.churchService.ChurchServiceBean;
 import org.afive.wecheck.churchService.ChurchServiceMapper;
 import org.afive.wecheck.configuration.Data;
@@ -35,6 +36,9 @@ public class CronTable {
 	
 	@Autowired
 	FcmMapper fcmMapper;
+	
+	@Autowired
+	BannerMapper bannerMapper;
 	
 //	@Scheduled(cron = "* 5 * * * SUN")
 	@Scheduled(initialDelay = 10000, fixedDelay=300000)
@@ -159,4 +163,13 @@ public class CronTable {
 			
 		}
 	}
+	
+	@Scheduled(initialDelay = 10000, fixedDelay=300000)
+	public void checkBanners() {
+		System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
+		System.out.println("Banner state check time");
+		bannerMapper.changeStateToEnd();
+	}
 }
+
+

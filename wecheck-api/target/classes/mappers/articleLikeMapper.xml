@@ -11,7 +11,7 @@
     	AND		isChecked = 1;
   	</select>
   	
-  	<select id="getCountByArticleID" parameterType="int" resultType = "String">
+  	<select id="getCountByArticleID" parameterType="String" resultType = "String">
   		SELECT	COUNT(*)
   		FROM	articleLike
   		WHERE	articleID = #{articleID}

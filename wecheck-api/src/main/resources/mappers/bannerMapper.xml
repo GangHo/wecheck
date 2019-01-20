@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.afive.wecheck.banner.mapper.BannerMapper">
+
+	<select id="getList" resultType="org.afive.wecheck.banner.bean.BannerBean">
+		SELECT	*
+		FROM banner;
+	</select>
+
+    <select id="get" parameterType="String" resultType="org.afive.wecheck.banner.bean.BannerBean">
+    	SELECT	*
+    	FROM	banner
+    	WHERE	bannerID = #{bannerID};
+    </select>
+    
+    <select id="getBanners" resultType = "org.afive.wecheck.banner.bean.BannerBean">
+  		SELECT	`bannerID`, `articleID`, `bannerImagePath`, `state`,
+  		DATE_FORMAT(postedTime,'%Y-%m-%d %H:%i:%s') as postedTime,
+		DATE_FORMAT(endTime,'%Y-%m-%d %H:%i:%s') as endTime
+  		FROM	banner
+  		WHERE 	state='0'
+  		ORDER BY bannerID desc;
+  	</select>
+  	
+  	  	<!--  '&gt;' 는 '>' 기호   -->
+  	<update id="changeStateToEnd">
+  		UPDATE	banner
+  		SET		state = '2'
+  		WHERE	state = '0' and (now() &gt; endTime);
+  	</update>
+  	
+</mapper>
+

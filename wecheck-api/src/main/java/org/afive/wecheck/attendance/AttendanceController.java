@@ -2,7 +2,10 @@ package org.afive.wecheck.attendance;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.afive.wecheck.attendance.AttendanceBean;
@@ -47,7 +50,7 @@ public class AttendanceController {
 			@RequestParam("lon")				String lon
 			){
 		
-		HashMap<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		
 		AccessTokenBean accessTokenBean = accessTokenMapper.get(accessToken);
 		
@@ -123,6 +126,11 @@ public class AttendanceController {
         	attendanceBean.setUserID(accessTokenBean.getUserID());
         	attendanceBean.setChurchServiceID(churchServiceID);
         	
+        	/**
+        	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+        	 */
+        	String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        	attendanceBean.setAttendanceTime(localDateTime);
         	attendanceMapper.register(attendanceBean);
         	
         	result.put("attendance", attendanceBean);
@@ -135,4 +143,26 @@ public class AttendanceController {
 		return result;
 	}
 	
+	@RequestMapping(value="" , method = RequestMethod.GET)
+	public Map<String,Object> getAttendance(
+			@RequestHeader("Authorization") String accessTokenID) {
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		AccessTokenBean accessTokenBean = accessTokenMapper.get(accessTokenID);
+		
+		/*-- accessToken이 유효하지 않은 경우 --*/
+		if(accessTokenBean==null) {
+			System.out.println("accessToken이 NULL이다.");
+			result.put("responseCode", String.valueOf(ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE));
+			return result;
+		}
+		
+		int userID = accessTokenBean.getUserID();
+		
+		List<AttendanceBean> attendanceBeanList = attendanceMapper.getAttendanceByUserID(String.valueOf(userID));
+		
+		
+		return result;
+	}
 }

@@ -25,14 +25,20 @@
     	INSERT INTO attendance 
     		(churchServiceID, userID, attendanceTime)
     	VALUES
-    		(#{churchServiceID}, #{userID}, now());
+    		(#{churchServiceID}, #{userID}, #{attandanceTime});
     </insert>
   	  	
-  	<select id="getAttendance" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceBean">
+  	<select id="checkAttendance" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceBean">
   		SELECT	*
   		FROM	attendance
   		WHERE	userID = #{userID}
   		AND		churchServiceID = #{churchServiceID};
+  	</select>
+  	
+  	<select id="getAttendanceByUserID" parameterType="String" resultType = "org.afive.wecheck.attendance.AttendanceBean">
+  		SELECT	*
+  		FROM	attendance
+  		WHERE	userID = #{userID};
   	</select>
 
 </mapper>

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.afive.wecheck.article.bean.ArticleBean;
+import org.afive.wecheck.article.mapper.ArticleMapper;
 import org.afive.wecheck.comment.bean.CommentBean;
 import org.afive.wecheck.comment.bean.CommentResult;
 import org.afive.wecheck.comment.mapper.CommentMapper;
@@ -28,10 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
-@RequestMapping(value = "article")
+@RequestMapping(value = "comments")
 public class CommentController {
 	
 
@@ -42,6 +42,9 @@ public class CommentController {
 	ConfirmRequestMapper confirmRequestMapper;
 	
 	@Autowired
+	ArticleMapper articleMapper;
+	
+	@Autowired
 	CommentMapper commentMapper;
 	
 	@Autowired
@@ -50,11 +53,13 @@ public class CommentController {
 	@Autowired
 	UserMapper userMapper;
 	
-	@RequestMapping(value ="/{articleID}/parents",method = RequestMethod.GET)
-	private Map<String,Object> getParentComment(
+	@RequestMapping(value ="/{articleID}/{parentID}/{pageNo}/{size}",method = RequestMethod.GET)
+	private Map<String,Object> getComment(
 			@RequestHeader("Authorization") String accessTokenID ,
 			@PathVariable(value = "articleID") String articleID ,
-			@RequestParam(value = "pageNo") String pageNoStr) {
+			@PathVariable(value = "parentID") String parentID ,
+			@PathVariable(value = "pageNo") String pageNoStr ,
+			@PathVariable(value = "size") String sizeStr) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -66,80 +71,109 @@ public class CommentController {
 		}
 		
 		/*
+		 * article에 대한 처리
+		 */
+		ArticleBean articleBean = articleMapper.get(articleID);
+		if(articleBean == null) {
+			System.out.println("댓글작성하려는데 articleID : " + articleID + "인 article이 없다");
+			result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+			return result;
+		}
+		
+		int articleState = articleBean.getState();
+		if(articleState != Data.ARTICLE_STATE_DEFAULT) {
+			System.out.println("댓글작성하려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
+			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
+		}
+		
+		/*
 		 * 필요없으면 삭제
 		 */
 		/*-- 접근하는 유저가 승인된 사람인지 아닌지 --*/
 		Integer userID = accessTokenBean.getUserID();
-		if( userID == null || userID == 0) {
-			Integer confirmRequestID = accessTokenBean.getConfirmRequestID();
-
-			if( confirmRequestID == null || confirmRequestID == 0) {
-				result.put("isApproved", null);
-				result.put("responseCode", ResponseCode.COMFIRMREQUESTID_IS_NULL);
-				return result;
-			}
-			else {
-				ConfirmRequestBean crBean = confirmRequestMapper.get(Integer.toString(confirmRequestID));
-				result.put("isApproved", crBean.getIsApproved());
-				result.put("responseCode", ResponseCode.USER_IS_NOT_APPROVED);
-				return result;
-			}
-		}
+//		if( userID == null || userID == 0) {
+//			Integer confirmRequestID = accessTokenBean.getConfirmRequestID();
+//
+//			if( confirmRequestID == null || confirmRequestID == 0) {
+//				result.put("isApproved", null);
+//				result.put("responseCode", ResponseCode.COMFIRMREQUESTID_IS_NULL);
+//				return result;
+//			}
+//			else {
+//				ConfirmRequestBean crBean = confirmRequestMapper.get(Integer.toString(confirmRequestID));
+//				result.put("isApproved", crBean.getIsApproved());
+//				result.put("responseCode", ResponseCode.USER_IS_NOT_APPROVED);
+//				return result;
+//			}
+//		}
 //		else {	// 승인받아 userID가 있는경우
 //			result.put("isApproved",1);
 //		}
 		
+		
 		int pageNo=Integer.parseInt(pageNoStr);
-		int start=((pageNo-1)* Data.COMMENT_PARENT_SIZE);
+		int parentSize = Integer.parseInt(sizeStr);
+		int start=((pageNo-1)* parentSize);
 		
 		HashMap<String,Object> commentMap = new HashMap<String,Object>();
 		commentMap.put("articleID", articleID);
+		commentMap.put("parentID", parentID);
 		commentMap.put("start", start);
-		commentMap.put("size", Data.COMMENT_PARENT_SIZE);
+		commentMap.put("size", parentSize);
 		
-		List<CommentBean> parentList = commentMapper.getParentListByArticleID(commentMap);
-		System.out.println("parentList Size ->" + parentList.size());
-		if(parentList.isEmpty()) {
+		List<CommentBean> commentList = commentMapper.getListByArticleAndParent(commentMap);
+		
+		if(commentList.isEmpty()) {
 			/*
-			 * 댓글이 없는 경우일때
+			 * 댓글이 없는 경우일때 (따로 처리해서 바로 종료하게 할 수 있음.)
 			 */
-			result.put("responseCode",ResponseCode.SUCCESS);
+			//result.put("responseCode",ResponseCode.SUCCESS);
+
 		}
 		
 		List<CommentResult> results = new ArrayList<>();
+		HashMap<String,Object> commentCountMap = new HashMap<String,Object>();
 		HashMap<String,Object> checkMap = new HashMap<String,Object>();
 		
-		for(int i=0; i<parentList.size(); i++) {
+		for(int i=0; i<commentList.size(); i++) {
 //			checkMap = null;
-			CommentBean commentBean = parentList.get(i);
+//			commentCountMap = null;
+			
+			CommentBean commentBean = commentList.get(i);
 			UserBean commenterBean = userMapper.get(String.valueOf(commentBean.getUserID()));
-			if(commenterBean == null) {
-				System.out.println("comment 불러오는데 작성자userBean이 NULL");
-				result.put("responseCode", String.valueOf(ResponseCode.FAILED_NO_MATCH));
-				return result;
-			}
+//			if(commenterBean == null || commenterBean.getState() != 0) {
+//				System.out.println("comment 불러오는데 작성자userBean이 NULL");
+//				result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+//				return result;
+//			}
 			
 			UserResult commenterResult = new UserResult();
 			commenterResult.setUserID(commenterBean.getUserID());
 			commenterResult.setUserType(commenterBean.getUserType());
+			commenterResult.setState(commenterBean.getState());
 			commenterResult.setLastName(commenterBean.getLastName());
 			commenterResult.setFirstName(commenterBean.getFirstName());
 			commenterResult.setProfileImage(commenterBean.getProfileImage());
 			
 			CommentResult commentResult = new CommentResult();
-			commentResult.setCommentBean(commentBean);
-			commentResult.setCommenterResult(commenterResult);
+			commentResult.setComment(commentBean);
+			commentResult.setCommenter(commenterResult);
 			
+			//댓글 좋아요 수
 			String commentLikeCount = commentLikeMapper.getCountByCommentID(String.valueOf(commentBean.getCommentID()));
-			commentResult.setCommentLikeCount(commentLikeCount);
+			commentResult.setLikeCount(commentLikeCount);
 			
-			String commentCount = commentMapper.getChildCountByParentID(String.valueOf(commentBean.getCommentID()));
+			commentCountMap.put("articleID", articleID);
+			commentCountMap.put("parentID", String.valueOf(commentBean.getCommentID()));
+			
+			//대댓글 개수
+			String commentCount = commentMapper.getCountByArticleAndParent(commentCountMap);
 			if(commentCount == null) {
 				commentCount = "0";
 			}
 			commentResult.setCommentCount(commentCount);
 			
-			
+			//좋아요 눌럿는지 체크
 			checkMap.put("userID", userID);
 			checkMap.put("commentID", commentBean.getCommentID());
 			
@@ -155,6 +189,7 @@ public class CommentController {
 		}
 		
 		result.put("comments", results);
+		result.put("responseCode",ResponseCode.SUCCESS);
 		
 		return result;
 		
@@ -163,11 +198,12 @@ public class CommentController {
 	/**
 	 * insert에 대한 POST요청
 	 */
-	@RequestMapping(value ="/{articleID}/parents/insert",method = RequestMethod.POST)
-	private Map<String,Object> setParentComment(
+	@RequestMapping(value ="/insert",method = RequestMethod.POST)
+	private Map<String,Object> setComment(
 			@RequestHeader("Authorization") String accessTokenID ,
-			@PathVariable(value = "articleID") String articleID ,
-			@RequestParam("contents") String contents) {
+			@RequestParam(value = "articleID") String articleID ,
+			@RequestParam(value = "parentID") String parentID ,
+			@RequestParam(value = "contents") String contents) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		/*-- accessToken Data --*/
@@ -177,12 +213,32 @@ public class CommentController {
 			return result;
 		}
 		
+		/*
+		 * article 상태에 대한 처리
+		 */
+		ArticleBean articleBean = articleMapper.get(articleID);
+		if(articleBean == null) {
+			System.out.println("댓글작성하려는데 articleID : " + articleID + "인 article이 없다");
+			result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+			return result;
+		}
+		
+		int articleState = articleBean.getState();
+		if(articleState != Data.ARTICLE_STATE_DEFAULT) {
+			System.out.println("댓글작성하려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
+			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
+			return result;
+		}
+		
 		Integer userID = accessTokenBean.getUserID();
+		
+		CommentResult commentResult = new CommentResult();
+		
 		
 		CommentBean commentBean = new CommentBean();
 		commentBean.setUserID(userID);
 		commentBean.setArticleID(Integer.parseInt(articleID));
-		commentBean.setParentID(Data.COMMENT_PARENTID_DEFAULT);
+		commentBean.setParentID(Integer.parseInt(parentID));
 		commentBean.setContents(contents);
 		
 		String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -190,7 +246,7 @@ public class CommentController {
 		commentBean.setRegisteredTime(localDateTime);
 		commentBean.setLastEditedTime(localDateTime);
 
-		result.put("comment", commentBean);
+		commentResult.setComment(commentBean);
 		
 		UserBean commenterBean = userMapper.get(String.valueOf(commentBean.getUserID()));
 		UserResult commenterResult = new UserResult();
@@ -202,8 +258,31 @@ public class CommentController {
 		
 
 		commentMapper.register(commentBean);
-		result.put("commenter", commenterResult);
-		result.put("resonseCode", ResponseCode.SUCCESS);
+		commentResult.setCommenter(commenterResult);
+		
+		commentResult.setLikeIsChecked(String.valueOf(Data.COMMENT_STATE_DEFAULT));
+		
+		if(commentBean.getParentID() == 0) {
+			//부모 댓글 개수
+			String commentCount = commentMapper.getTotalCountByArticleID(articleID);
+			commentResult.setCommentCount(commentCount);
+		}
+		else {
+			//대댓글 개수
+			HashMap<String,Object> commentCountMap = new HashMap<String,Object>();
+			commentCountMap.put("articleID", articleID);
+			commentCountMap.put("parentID", parentID);
+			//대댓글 개수
+			String commentCount = commentMapper.getCountByArticleAndParent(commentCountMap);
+			if(commentCount == null) {
+				commentCount = "0";
+			}
+			commentResult.setCommentCount(commentCount);
+		}
+		
+		commentResult.setLikeCount(String.valueOf(0));
+		result.put("comment", commentResult);
+		result.put("responseCode", ResponseCode.SUCCESS);
 		
 		return result;
 	}
@@ -211,12 +290,11 @@ public class CommentController {
 	/**
 	 * update에 대한 POST요청
 	 */
-	@RequestMapping(value ="/{articleID}/parents/{parentID}/update",method = RequestMethod.POST)
-	private Map<String,Object> updateParentComment(
+	@RequestMapping(value ="/update",method = RequestMethod.POST)
+	private Map<String,Object> updateComment(
 			@RequestHeader("Authorization") String accessTokenID ,
-			@PathVariable(value = "articleID") String articleID ,
-			@PathVariable(value = "parentID") String parentID ,
-			@RequestParam("contents") String contents) {
+			@RequestParam(value = "commentID") String commentID ,
+			@RequestParam(value = "contents") String contents) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -228,7 +306,7 @@ public class CommentController {
 		}
 		
 		int userID = accessTokenBean.getUserID();
-		CommentBean parentBean = commentMapper.get(parentID);
+		CommentBean parentBean = commentMapper.get(commentID);
 		int commenterID = parentBean.getUserID();
 		
 		/**
@@ -241,7 +319,7 @@ public class CommentController {
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		map.put("commentID",Integer.parseInt(parentID));
+		map.put("commentID",Integer.parseInt(commentID));
 		map.put("contents", contents);
 		String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		map.put("lastEditedTime",localDateTime);
@@ -256,12 +334,10 @@ public class CommentController {
 	/**
 	 * delete에 대한 POST요청
 	 */
-	@RequestMapping(value ="/{articleID}/parents/{parentID}/delete",method = RequestMethod.POST)
-	private Map<String,Object> deleteParentComment(
+	@RequestMapping(value ="/delete",method = RequestMethod.POST)
+	private Map<String,Object> deleteComment(
 			@RequestHeader("Authorization") String accessTokenID ,
-			@PathVariable(value = "articleID") String articleID ,
-			@PathVariable(value = "parentID") String parentID ,
-			@RequestParam("contents") String contents) {
+			@RequestParam(value = "commentID") String commentID ) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		 
@@ -273,7 +349,7 @@ public class CommentController {
 		}
 		
 		int userID = accessTokenBean.getUserID();
-		CommentBean parentBean = commentMapper.get(parentID);
+		CommentBean parentBean = commentMapper.get(commentID);
 		int commenterID = parentBean.getUserID();
 		
 		/**
@@ -285,7 +361,7 @@ public class CommentController {
 		}
 		
 		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("commentID", parentID);
+		map.put("commentID", commentID);
 		map.put("state",Data.COMMENT_STATE_DELETED);
 		String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 		map.put("deletedTime",localDateTime);
@@ -294,6 +370,78 @@ public class CommentController {
 		
 		result.put("deletedComment",map);
 		result.put("responseCode",ResponseCode.SUCCESS);
+		return result;
+	}
+	
+	/**
+	 * 하나의 댓글에 대한 정보 가져오기
+	 */
+	@RequestMapping(value ="/{commentID}",method = RequestMethod.GET)
+	private Map<String,Object> updateComment(
+			@RequestHeader("Authorization") String accessTokenID ,
+			@PathVariable(value = "commentID") String commentID ) {
+		
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		/*-- accessToken Data --*/
+		AccessTokenBean accessTokenBean = accessTokenMapper.get(accessTokenID);
+		if(accessTokenBean==null) {
+			result.put("responseCode", String.valueOf(ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE));
+			return result;
+		}
+		
+		CommentBean commentBean = commentMapper.get(commentID);
+		
+		Integer commenterID = commentBean.getUserID();
+		UserBean commenterBean = userMapper.get(String.valueOf(commenterID));
+		
+		UserResult commenterResult = new UserResult();
+		commenterResult.setUserID(commenterBean.getUserID());
+		commenterResult.setUserType(commenterBean.getUserType());
+		commenterResult.setLastName(commenterBean.getLastName());
+		commenterResult.setFirstName(commenterBean.getFirstName());
+		commenterResult.setProfileImage(commenterBean.getProfileImage());
+		
+		CommentResult commentResult = new CommentResult();
+		
+		commentResult.setComment(commentBean);
+		commentResult.setCommenter(commenterResult);
+		
+		
+		//댓글 좋아요 수
+		String commentLikeCount = commentLikeMapper.getCountByCommentID(String.valueOf(commentBean.getCommentID()));
+		commentResult.setLikeCount(commentLikeCount);;
+		
+		
+		HashMap<String,Object> commentCountMap = new HashMap<String,Object>();
+		
+		commentCountMap.put("articleID", String.valueOf(commentBean.getArticleID()));
+		commentCountMap.put("parentID", String.valueOf(commentBean.getParentID()));
+		//대댓글 개수
+		String commentCount = commentMapper.getCountByArticleAndParent(commentCountMap);
+		if(commentCount == null) {
+			commentCount = "0";
+		}
+		commentResult.setCommentCount(commentCount);
+		
+		//좋아요 눌렀는지 체크
+		HashMap<String,Object> checkMap = new HashMap<String,Object>();
+		
+
+		Integer userID = accessTokenBean.getUserID();
+		
+		checkMap.put("userID", userID);
+		checkMap.put("commentID", commentBean.getCommentID());
+		
+		Integer isChecked = commentLikeMapper.isCheckedByUserAndComment(checkMap);
+		
+		if(isChecked == null) {
+			isChecked = 0;
+		}
+		commentResult.setLikeIsChecked(String.valueOf(isChecked));
+		
+		result.put("comment", commentResult);
+		result.put("responseCode", ResponseCode.SUCCESS);
 		return result;
 	}
 

@@ -6,6 +6,8 @@ public class QuoteBean {
 	private String source;
 	private String words;
 	private String postedTime;
+	private int state;
+	private String deletedTime;
 	
 	
 	public int getQuoteID() {
@@ -37,5 +39,17 @@ public class QuoteBean {
 	}
 	public void setPostedTime(String postedTime) {
 		this.postedTime = postedTime;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
+	public String getDeletedTime() {
+		return deletedTime;
+	}
+	public void setDeletedTime(String deletedTime) {
+		this.deletedTime = deletedTime;
 	}
 }

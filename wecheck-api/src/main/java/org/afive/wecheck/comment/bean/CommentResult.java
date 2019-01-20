@@ -3,23 +3,23 @@ package org.afive.wecheck.comment.bean;
 import org.afive.wecheck.user.bean.UserResult;
 
 public class CommentResult {
-	private UserResult commenterResult;
-	private CommentBean commentBean;
+	private UserResult commenter;
+	private CommentBean comment;
 	private String likeIsChecked;
 	private String commentCount;
-	private String	commentLikeCount;
+	private String likeCount;
 	
-	public UserResult getCommenterResult() {
-		return commenterResult;
+	public UserResult getCommenter() {
+		return commenter;
 	}
-	public void setCommenterResult(UserResult commenterResult) {
-		this.commenterResult = commenterResult;
+	public void setCommenter(UserResult commenter) {
+		this.commenter = commenter;
 	}
-	public CommentBean getCommentBean() {
-		return commentBean;
+	public CommentBean getComment() {
+		return comment;
 	}
-	public void setCommentBean(CommentBean commentBean) {
-		this.commentBean = commentBean;
+	public void setComment(CommentBean comment) {
+		this.comment = comment;
 	}
 	public String getLikeIsChecked() {
 		return likeIsChecked;
@@ -33,12 +33,11 @@ public class CommentResult {
 	public void setCommentCount(String commentCount) {
 		this.commentCount = commentCount;
 	}
-	public String getCommentLikeCount() {
-		return commentLikeCount;
+	public String getLikeCount() {
+		return likeCount;
 	}
-	public void setCommentLikeCount(String commentLikeCount) {
-		this.commentLikeCount = commentLikeCount;
+	public void setLikeCount(String likeCount) {
+		this.likeCount = likeCount;
 	}
-	
 	
 }

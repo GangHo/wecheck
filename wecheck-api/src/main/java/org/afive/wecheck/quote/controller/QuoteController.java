@@ -49,7 +49,7 @@ public class QuoteController {
 		}
 		
 		QuoteBean quoteBean =  new QuoteBean();
-		quoteBean = quoteMapper.getRandomQuote(accessTokenID);
+		quoteBean = quoteMapper.getRandomQuote();
 		
 		result.put("quote",quoteBean);
 		result.put("responseCode", ResponseCode.SUCCESS);

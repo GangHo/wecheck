@@ -28,7 +28,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		now()
+		#{registeredTime}
 		);
 		
 	</insert>
@@ -43,7 +43,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		now(),
+		#{registeredTime},
 		#{userID}
 		);
 		
@@ -59,7 +59,7 @@
 		#{snsLoginID}, 
 		#{uuid},
 		#{deviceType},
-		now(),
+		#{registeredTime},
 		#{confirmRequestID}
 		);
 		

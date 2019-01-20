@@ -4,19 +4,20 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.afive.wecheck.article.mapper.ArticleFileMapper">
 
-	<select id="getList" resultType="org.afive.wecheck.article.bean.ArticleBean">
+	<select id="getList" resultType="org.afive.wecheck.article.bean.ArticleFileBean">
 		SELECT	*
-		FROM quote;
+		FROM articleFile;
 	</select>
 
-    <select id="get" parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleBean">
+    <select id="get" parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleFileBean">
     	SELECT	*
-    	FROM	quote
-    	WHERE	quoteID = #{quoteID};
+    	FROM	articleFile
+    	WHERE	articleFileID = #{articleFileID};
     </select>
     
-    <select id="getByArticleID" parameterType="String" resultType = "org.afive.wecheck.article.bean.ArticleBean">
-  		SELECT	*
+    <select id="getByArticleID" parameterType="String" resultType = "org.afive.wecheck.article.bean.ArticleFileBean">
+  		SELECT  `articleFileID`,  `articleID`,  `fileType`, `articleFilePath`,
+  		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime
   		FROM	articleFile
   		WHERE	articleID = #{articleID};
   	</select>

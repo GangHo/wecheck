@@ -1,6 +1,8 @@
 package org.afive.wecheck.configuration;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 import org.afive.wecheck.user.bean.AccessTokenBean;
@@ -29,7 +31,13 @@ public class BaseTool {
         accessToken.setSnsLoginID(snsLoginID);
         accessToken.setUuid(uuid);
         accessToken.setDeviceType(deviceType);
-  
+        
+        /**
+    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+    	 */
+    	String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    	
+    	accessToken.setRegisteredTime(localDateTime);
         
         
 	    return accessToken;

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,10 +34,10 @@ public class ArticleLikeController {
 	ArticleLikeMapper articleLikeMapper;
 	
 	
-	@RequestMapping(value = "/articles/{articleID}" ,method = RequestMethod.POST)
+	@RequestMapping(value = "/articles" ,method = RequestMethod.POST)
 	private Map<String,Object> updateLike(
 			@RequestHeader("Authorization") String accessTokenID ,
-			@PathVariable(value = "articleID") String articleID ) {
+			@RequestParam(value = "articleID") String articleID ) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -51,7 +52,7 @@ public class ArticleLikeController {
 		
 		if(userID == null) {
 			System.out.println("userID 없는 사람이 articleID : "+articleID+" 에 Like시도");
-			result.put("responseCode", ResponseCode.ACCESS_DENIED_WRONG_ACCESSCODE);
+			result.put("responseCode", ResponseCode.ACCESS_DENIED_USERID_DOESNT_MATCH);
 			return result;
 		}
 		
@@ -62,12 +63,14 @@ public class ArticleLikeController {
 		if(articleBean == null) {
 			System.out.println("articleLike 누르려는데 articleID : " + articleID + "인 article이 없다");
 			result.put("responseCode", ResponseCode.FAILED_NO_MATCH);
+			return result;
 		}
 		
 		int articleState = articleBean.getState();
-		if(articleState == Data.ARTICLE_STATE_DELETED) {
+		if(articleState != Data.ARTICLE_STATE_DEFAULT) {
 			System.out.println("articleLike 누르려는데 articleID : " + articleID + "인 article은 삭제(state가 deleted)됨");
 			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
+			return result;
 		}
 		
 		ArticleLikeBean articleLikeBean = new ArticleLikeBean();
@@ -93,7 +96,10 @@ public class ArticleLikeController {
 			articleLikeMapper.updateArticleLike(articleLikeBean);
 		}
 		
-		result.put("artlcieLike", articleLikeBean);
+		String likeCount = articleLikeMapper.getCountByArticleID(articleID);
+		result.put("likeCount", likeCount);
+		
+		result.put("articleLike", articleLikeBean);
 		result.put("responseCode", ResponseCode.SUCCESS);
 		
 		return result;

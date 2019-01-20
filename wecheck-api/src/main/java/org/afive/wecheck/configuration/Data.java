@@ -22,14 +22,16 @@ public class Data {
 	/**
 	 * created by gangho
 	 */
-	public final static int COMMENT_PARENT_SIZE = 15; // 댓글 페이징시 불러오는 크기
-	public final static int COMMENT_CHILD_SIZE = 20; // 대댓글 페이징시 불러오는 크기
+	
+//	public final static int COMMENT_PARENT_SIZE = 15; // 댓글 페이징시 불러오는 크기 //받는 파라미터로 설정하게끔 수정
+//	public final static int COMMENT_CHILD_SIZE = 20; // 대댓글 페이징시 불러오는 크기 //받는 파라미터로 설정하게끔 수정
 	public final static Integer COMMENT_PARENTID_DEFAULT = 0; // 추후에 null로 할꺼면 NULL로 변경
 	
 	public final static int ARTICLE_STATE_DEFAULT = 0;
 	public final static int COMMENT_STATE_DEFAULT = 0;
-	public final static int ARTICLE_STATE_DELETED = 1;
-	public final static int COMMENT_STATE_DELETED = 1;
+	public final static int QUOTE_STATE_DEFAULT = 0;
+	public final static int ARTICLE_STATE_DELETED = 1; // 유저가 지웠을때 state 1
+	public final static int COMMENT_STATE_DELETED = 1; // 유저가 지웠을때 state 1
 	
 	public final static int COMMENTLIKE_DEFAULT = 0;
 	public final static int COMMENTLIKE_CHECKED = 1;
@@ -38,4 +40,7 @@ public class Data {
 	public final static int ARTICLELIKE_CHECKED = 1;
 
 	public final static int PUSH_TYPE_CHURCHSERVICE = 10; // 예배시간에 대한 PUSH메세지 타입
+	
+	public final static String YOUTUBE_THUMBNAIL_PATH = "http://img.youtube.com/vi/";
+	public final static String YOUTUBE_THUMBNAIL_FORM = "/default.jpg";
 }

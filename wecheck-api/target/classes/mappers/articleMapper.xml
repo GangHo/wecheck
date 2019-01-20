@@ -6,7 +6,10 @@
 
 	<select id="getList"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
-		SELECT *
+    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
+		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
 		FROM article
 		WHERE #{privacy} >= privacy
 		ORDER by postedDate desc
@@ -16,7 +19,10 @@
 	
 	<select id="getListFromArticleGroup"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
-		SELECT *
+    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
+		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
 		FROM article
 		WHERE (articleGroupID=#{articleGroupID} AND #{privacy} >= privacy
 		AND state = 0)
@@ -25,8 +31,11 @@
 		;
 	</select>
 	
-	<select id="get" parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleBean">
-    	SELECT	*
+	<select id="get"  parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleBean">
+    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
+		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
     	FROM	article
   		WHERE	articleID = #{articleID};
   	</select>

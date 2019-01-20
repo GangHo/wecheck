@@ -1,5 +1,7 @@
 package org.afive.wecheck.user.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,7 +59,7 @@ public class SnsLoginController {
 			@RequestParam("snsType") int snsType, 
 			@RequestParam("snsToken") String snsToken, 
 			@RequestParam("fcmToken") String fcmToken, 
-			@RequestParam("uuid") String uuid, 
+			@RequestParam("uuid") String uuid,
 			@RequestParam("deviceType") int deviceType){
 		
 		System.out.println("데이터 도착 snsType : "+snsType+", snsToken : "+snsToken+", fcmToken : "+fcmToken+", uuid : "+uuid+", deviceType : "+deviceType);
@@ -72,6 +74,12 @@ public class SnsLoginController {
 		
 		//일단 snsLogin에 저장된 snsLogin 유저가 아니면 새롭게 만들어서 저장한다.
 		//새롭게 만들어진 경우 user에 있다던가 confirmRequest에 있을리가 만무함으로 login_state : none으로 바로 리턴한다.
+		
+		/**
+    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+    	 */
+    	String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    	
 		if(snsUserBean == null) {
 			
 			System.out.println("SNS login 레코드 없다.");
@@ -79,6 +87,9 @@ public class SnsLoginController {
 			snsUserBean=new SnsLoginBean();
 			snsUserBean.setSnsToken(snsToken);
 			snsUserBean.setSnsType(snsType);
+			
+        	
+        	snsUserBean.setRegisteredTime(localDateTime);
 			
 			snsLoginMapper.register(snsUserBean);
 			
@@ -95,6 +106,10 @@ public class SnsLoginController {
 			fcmParamBean.setFcmToken(fcmToken);
 			fcmParamBean.setSnsLoginID(snsUserBean.getSnsLoginID());
 			fcmParamBean.setUuid(uuid);
+			/**
+        	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+        	 */
+			fcmParamBean.setFcmRegisteredTime(localDateTime);
 			fcmMapper.deleteIfExists(fcmParamBean);
 			fcmMapper.registerWithOutUserID(fcmParamBean);
 
@@ -103,7 +118,7 @@ public class SnsLoginController {
 			
 			//일단 있는지 확인 있으면 삭제		        
 			AccessTokenBean accessToken = BaseTool.createAccessToken(snsUserBean.getSnsLoginID(), uuid, deviceType);
-
+			
 	        accessTokenMapper.updateIfExists(accessToken);
 	        accessTokenMapper.register(accessToken);
 	        
@@ -134,6 +149,10 @@ public class SnsLoginController {
 			fcmParamBean.setFcmToken(fcmToken);
 			fcmParamBean.setSnsLoginID(snsUserBean.getSnsLoginID());
 			fcmParamBean.setUuid(uuid);
+			/**
+        	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+        	 */
+			fcmParamBean.setFcmRegisteredTime(localDateTime);
 			fcmMapper.deleteIfExists(fcmParamBean);
 			fcmMapper.register(fcmParamBean);
 
@@ -165,6 +184,10 @@ public class SnsLoginController {
 			fcmParamBean.setFcmToken(fcmToken);
 			fcmParamBean.setSnsLoginID(snsUserBean.getSnsLoginID());
 			fcmParamBean.setUuid(uuid);
+			/**
+        	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+        	 */
+			fcmParamBean.setFcmRegisteredTime(localDateTime);
 			fcmMapper.deleteIfExists(fcmParamBean);
 			fcmMapper.registerWithOutUserID(fcmParamBean);
 
@@ -196,6 +219,10 @@ public class SnsLoginController {
 		fcmParamBean.setFcmToken(fcmToken);
 		fcmParamBean.setSnsLoginID(snsUserBean.getSnsLoginID());
 		fcmParamBean.setUuid(uuid);
+		/**
+    	 * 2019-01-17 edited by gangho - 시간등록 DB now() 가 아닌 자바에서 등록
+    	 */
+		fcmParamBean.setFcmRegisteredTime(localDateTime);
 		fcmMapper.deleteIfExists(fcmParamBean);
 		fcmMapper.registerWithOutUserID(fcmParamBean);
 		

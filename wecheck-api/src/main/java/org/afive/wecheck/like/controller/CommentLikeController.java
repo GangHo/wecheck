@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,10 +35,10 @@ public class CommentLikeController {
 	CommentLikeMapper commentLikeMapper;
 	
 	
-	@RequestMapping(value = "/comments/{commentID}" ,method = RequestMethod.POST)
+	@RequestMapping(value = "/comments" ,method = RequestMethod.POST)
 	private Map<String,Object> updateLike(
 			@RequestHeader("Authorization") String accessTokenID ,
-			@PathVariable(value = "commentID") String commentID ) {
+			@RequestParam(value = "commentID") String commentID ) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -61,12 +62,14 @@ public class CommentLikeController {
 		if(commentBean == null) {
 			System.out.println("commentLike 누르려는데commentID : " + commentID + "인 comment가 없다");
 			result.put("responseCode", ResponseCode.COMMENT_STATE_DELETED);
+			return result;
 		}
 		
 		int commentState = commentBean.getState();
 		if(commentState != Data.COMMENT_STATE_DEFAULT) {
 			System.out.println("articleLike 누르려는데 articleID : " + commentID + "인 article은 state 가 default가 아님");
 			result.put("responseCode", ResponseCode.ARTICLE_STATE_DELETED);
+			return result;
 		}
 
 		CommentLikeBean commentLikeBean = new CommentLikeBean();
@@ -91,6 +94,9 @@ public class CommentLikeController {
 			commentLikeBean.setIsChecked(Data.COMMENTLIKE_DEFAULT);
 			commentLikeMapper.updateCommentLike(commentLikeBean);
 		}
+		
+		String likeCount = commentLikeMapper.getCountByCommentID(commentID);
+		result.put("likeCount", likeCount);
 		
 		result.put("commentLike", commentLikeBean);
 		result.put("responseCode", ResponseCode.SUCCESS);

@@ -18,6 +18,8 @@ public class UserBean {
 	private int isOpened;
 	private String createdTime;
 	private String registeredTime;
+	private int state;
+	private String deletedTime;
 	
 	private ArrayList snsLoginList;
 	
@@ -105,5 +107,16 @@ public class UserBean {
 	public void setSnsLoginList(ArrayList snsLoginList) {
 		this.snsLoginList = snsLoginList;
 	}
-	
+	public void setState(int state) {
+		this.state = state;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setDeletedTime(String deletedTime) {
+		this.deletedTime = deletedTime;
+	}
+	public String getDeletedTime() {
+		return deletedTime;
+	}
 }

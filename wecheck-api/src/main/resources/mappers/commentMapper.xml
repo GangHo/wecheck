@@ -5,12 +5,18 @@
 <mapper namespace="org.afive.wecheck.comment.mapper.CommentMapper">
 
 	<select id="getList" resultType="org.afive.wecheck.comment.bean.CommentBean">
-		SELECT	*
+		SELECT `commentID`,  `userID`,  `privacy`,  `articleID`,  `parentID`,  `contents`,`state`,
+		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime,
+		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
 		FROM	comment;
 	</select>
 
     <select id="get" parameterType="String" resultType="org.afive.wecheck.comment.bean.CommentBean">
-    	SELECT	*
+		SELECT `commentID`,  `userID`,  `privacy`,  `articleID`,  `parentID`,  `contents`,`state`,
+		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime,
+		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
     	FROM	comment
     	WHERE	commentID = #{commentID};
     </select>
@@ -37,37 +43,31 @@
     </update>
     
     <!--	댓글,대댓글 포함한 댓글개수 카운팅		-->
-    <select id="getTotalCountByArticleID" parameterType="String" resultType = "String">
+    <select id="getTotalCountByArticleID" resultType = "String">
   		SELECT	COUNT(*)
   		FROM	comment
   		WHERE	articleID = #{articleID};
   	</select>
   	
   	<!-- 	댓글에 대한 대댓글 개수 카운팅		-->
-  	<select id="getChildCountByParentID" parameterType="String" resultType = "String">
+  	<select id="getCountByArticleAndParent" parameterType="hashmap" resultType = "String">
   		SELECT	COUNT(*)
   		FROM	comment
-  		WHERE	parentID = #{parentID}
+  		WHERE	articleID = #{articleID}
+  		AND		parentID = #{parentID};
   	
   	</select>
   	
-  	<select id="getParentListByArticleID" parameterType="hashmap" resultType = "org.afive.wecheck.comment.bean.CommentBean">
-  		SELECT	*
-  		FROM	comment
-  		WHERE	(parentID = '0'
-  		AND		articleID = #{articleID} )
-  		Order by	commentID 
-  		LIMIT	#{start},#{size};
-  	</select>
-  	
-  	<select id="getChildListByParentID" parameterType="hashmap" resultType = "org.afive.wecheck.comment.bean.CommentBean">
-  		SELECT	*
+  	<select id="getListByArticleAndParent" parameterType="hashmap" resultType = "org.afive.wecheck.comment.bean.CommentBean">
+		SELECT `commentID`,  `userID`,  `privacy`,  `articleID`,  `parentID`,  `contents`,`state`,
+		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime,
+		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
   		FROM	comment
   		WHERE	(parentID = #{parentID}
   		AND		articleID = #{articleID})
   		Order by	commentID 
   		LIMIT	#{start},#{size};
-  	
   	</select>
   	
 

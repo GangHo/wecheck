@@ -5,6 +5,6 @@ import org.afive.wecheck.quote.bean.QuoteBean;
 
 public interface QuoteMapper extends CommonMapper<QuoteBean,String>{
 	
-	public QuoteBean getRandomQuote(String accessTokenID);
+	public QuoteBean getRandomQuote();
 	
 }

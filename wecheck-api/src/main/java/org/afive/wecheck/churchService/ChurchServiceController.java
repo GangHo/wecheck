@@ -68,7 +68,7 @@ public class ChurchServiceController {
 		map.put("userID", userID);
 		map.put("churchServiceID",churchServiceBean.getChurchServiceID());
 		
-		AttendanceBean attendanceBean = attendanceMapper.getAttendance(map);
+		AttendanceBean attendanceBean = attendanceMapper.checkAttendance(map);
 		
 		/*-- 예배시간이지만 출석을 하지 않은 경우 --*/
 		if(attendanceBean==null) {

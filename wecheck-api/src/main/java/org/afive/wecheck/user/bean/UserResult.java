@@ -3,6 +3,7 @@ package org.afive.wecheck.user.bean;
 public class UserResult {
 	private int userID;
 	private int userType;
+	private int state;
 	private String firstName;
 	private String lastName;
 	private String profileImage;
@@ -37,6 +38,11 @@ public class UserResult {
 	public void setProfileImage(String profileImage) {
 		this.profileImage = profileImage;
 	}
-	
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
 	
 }

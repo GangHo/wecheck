@@ -47,7 +47,7 @@
 		snsLoginID, fcmToken, deviceType, uuid, fcmRegisteredTime)
 		VALUES
 		(
-		#{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, now());
+		#{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, #{fcmRegisteredTime});
 	</insert>
 	
 	<insert id="register"
@@ -58,20 +58,18 @@
 		snsLoginID, fcmToken, deviceType, uuid, fcmRegisteredTime)
 		VALUES
 		(
-		#{userID}, #{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, now());
+		#{userID}, #{snsLoginID}, #{fcmToken}, #{deviceType}, #{uuid}, #{fcmRegisteredTime});
 	</insert>
 
 	<update id="update"
 		parameterType="org.afive.wecheck.user.bean.FcmBean">
 		UPDATE fcm
 		SET userID = #{userID},
-		snsLoginID =
-		#{snsLoginID},
+		snsLoginID = #{snsLoginID},
 		fcmToken = #{fcmToken},
 		deviceType = #{deviceType},
-		uuid =
-		#{uuid},
-		fcmRegisteredTime = now()
+		uuid = #{uuid},
+		fcmRegisteredTime = #{fcmRegisteredTime},
 		WHERE fcmID = #{fcmID};
 	</update>
 
