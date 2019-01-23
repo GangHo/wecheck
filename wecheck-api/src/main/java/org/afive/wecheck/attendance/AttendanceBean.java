@@ -5,6 +5,7 @@ public class AttendanceBean {
 	private int churchServiceID;
 	private int userID;
 	private String attendanceTime;
+	
 	public int getAttendanceID() {
 		return attendanceID;
 	}

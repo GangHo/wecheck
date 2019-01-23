@@ -2,7 +2,6 @@ package org.afive.wecheck.attendance;
 
 public class AttendanceResult { 
 	private AttendanceBean attendance;
-//	private int churchServiceID;
 	private String regionName;
 	private String unitName;
 	private String startTime;
@@ -12,9 +11,6 @@ public class AttendanceResult {
 	public void setAttendance(AttendanceBean attendance) {
 		this.attendance = attendance;
 	}
-
-
-	
 	public String getRegionName() {
 		return regionName;
 	}

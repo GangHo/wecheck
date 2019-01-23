@@ -41,11 +41,12 @@ public class CronTable {
 	BannerMapper bannerMapper;
 	
 //	@Scheduled(cron = "* 5 * * * SUN")
-	@Scheduled(initialDelay = 10000, fixedDelay=300000)
+//	@Scheduled(initialDelay = 10000, fixedDelay=300000)
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public void checkChurchService() {
-		System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
+		
 		/**
-		 * changeStateToEnd() -> state가 1인걸 2로 바꿔줌
+		 * changeStateToEnd() -> state가 1인걸 2로 
 		 */
 		churchServiceMapper.changeStateToEnd();
 //		churchServiceMapper.changeStateToBegin();
@@ -58,10 +59,13 @@ public class CronTable {
 		churchServiceList = churchServiceMapper.getChurchServiceList(); 
 		
 		if(churchServiceList.size() == 0) {
+			System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
 			System.out.println("예배시간인 곳이 없습니다.");
 			return;
+			
 		}
 		else {
+			System.out.println("알림 가는시간 : " +new SimpleDateFormat("hh:mm:ss").format(new Date()));
 			System.out.println("예배시간인 곳이 있습니다");
 			
 			String title = "예배시간입니다";
@@ -71,7 +75,8 @@ public class CronTable {
 				ChurchServiceBean churchServiceBean = null;
 				churchServiceBean = churchServiceList.get(i);
 				
-				System.out.println( churchServiceBean.getChurchServiceID());
+				System.out.println("예배ID : " +churchServiceBean.getChurchServiceID());
+				System.out.println("실제 시작시간 : "+churchServiceBean.getStartTime());
 				
 				int regionID = churchServiceBean.getRegionID();
 				int unitID = churchServiceBean.getUnitID();
@@ -164,7 +169,8 @@ public class CronTable {
 		}
 	}
 	
-	@Scheduled(initialDelay = 10000, fixedDelay=300000)
+//	@Scheduled(initialDelay = 10000, fixedDelay=300000)
+	@Scheduled(cron = "0 0/5 * * * ?")
 	public void checkBanners() {
 		System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
 		System.out.println("Banner state check time");

@@ -19,13 +19,13 @@
   		SELECT	*
   		FROM	churchService
   		WHERE	(state = '0')
-  		AND		(now() between startTime and endTime);
+  		AND		(now() between DATE_SUB(startTime,INTERVAL 20 MINUTE) and endTime);
   	</select>
   	
   	<update id="changeStateToBegin">
   		UPDATE	churchService
   		SET		state = '1'
-  		WHERE	state ='0' and (now() between startTime and endTime);
+  		WHERE	state ='0' and (now() between DATE_SUB(startTime,INTERVAL 20 MINUTE) and endTime);
   	</update>
   	
   	<!--  '&gt;' 는 '>' 기호   -->
@@ -38,7 +38,7 @@
   	<select id='getChurchService' parameterType="String" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
   		SELECT	*
 		FROM	churchService
-		WHERE	(now() between startTime and endTime) and (regionID,unitID) IN(
+		WHERE	(now() between DATE_SUB(startTime,INTERVAL 20 MINUTE) and endTime) and (regionID,unitID) IN(
 			SELECT	regionID,unitID
 			FROM	user
 			WHERE	userID IN(

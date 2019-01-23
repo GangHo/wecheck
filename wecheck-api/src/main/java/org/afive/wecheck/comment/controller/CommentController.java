@@ -416,7 +416,7 @@ public class CommentController {
 		HashMap<String,Object> commentCountMap = new HashMap<String,Object>();
 		
 		commentCountMap.put("articleID", String.valueOf(commentBean.getArticleID()));
-		commentCountMap.put("parentID", String.valueOf(commentBean.getParentID()));
+		commentCountMap.put("parentID", String.valueOf(commentBean.getCommentID()));
 		//대댓글 개수
 		String commentCount = commentMapper.getCountByArticleAndParent(commentCountMap);
 		if(commentCount == null) {
