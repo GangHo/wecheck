@@ -126,10 +126,11 @@ public class ArticleController {
 		HashMap<String,Object> commentCountMap = new HashMap<>();
 		HashMap<String,Object> checkMap = new HashMap<>();
 		
+		Integer userID = accessTokenBean.getUserID();
+		
 		for(int i = 0; i < articleList.size(); i++) {
 			ArticleBean articleBean = articleList.get(i);
-			ArticleResult articleResult = new ArticleResult();
-			Integer userID = articleBean.getUserID();
+			ArticleResult articleResult = new ArticleResult(); 
 			int articleID = articleBean.getArticleID();
 			
 			articleResult.setArticle(articleBean);
