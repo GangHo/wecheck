@@ -10,6 +10,8 @@ public class Data {
 	public static final int DEVICE_TYPE_WEB = 2;
 	
 	public static final int PUSH_TYPE_CONFIRM_REQUEST_RESULT=0;
+	public static final int PUSH_TYPE_ARTICLE_LIKE=1;
+	public static final int PUSH_TYPE_COMMENT_LIKE=2;
 	
 	public static final int PUSH_IDX_ACCEPTED=1; //0에서1로 수정함
 	public static final int PUSH_IDX_DENIED=2; //1에서2로 수정함
