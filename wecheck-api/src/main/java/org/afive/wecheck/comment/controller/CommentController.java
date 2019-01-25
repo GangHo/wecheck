@@ -1,11 +1,13 @@
 package org.afive.wecheck.comment.controller;
 
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.afive.wecheck.article.bean.ArticleBean;
 import org.afive.wecheck.article.mapper.ArticleMapper;
@@ -15,14 +17,21 @@ import org.afive.wecheck.comment.mapper.CommentMapper;
 import org.afive.wecheck.configuration.Data;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.mapper.CommentLikeMapper;
+import org.afive.wecheck.service.PushNotificationService;
 import org.afive.wecheck.user.bean.AccessTokenBean;
 import org.afive.wecheck.user.bean.ConfirmRequestBean;
+import org.afive.wecheck.user.bean.FcmBean;
 import org.afive.wecheck.user.bean.UserBean;
 import org.afive.wecheck.user.bean.UserResult;
 import org.afive.wecheck.user.mapper.AccessTokenMapper;
 import org.afive.wecheck.user.mapper.ConfirmRequestMapper;
+import org.afive.wecheck.user.mapper.FcmMapper;
 import org.afive.wecheck.user.mapper.UserMapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,6 +61,9 @@ public class CommentController {
 	
 	@Autowired
 	UserMapper userMapper;
+	
+	@Autowired
+	private FcmMapper fcmMapper;
 	
 	@RequestMapping(value ="/{articleID}/{parentID}/{pageNo}/{size}",method = RequestMethod.GET)
 	private Map<String,Object> getComment(
@@ -283,6 +295,71 @@ public class CommentController {
 		commentResult.setLikeCount(String.valueOf(0));
 		result.put("comment", commentResult);
 		result.put("responseCode", ResponseCode.SUCCESS);
+		
+		/*
+		 * 이제 댓 푸시 날리는거 할것이다./////////////////////////////
+		 * */
+		
+		if(articleBean.getUserID()!=userID) {
+			UserBean userBean = userMapper.get(userID+"");
+			FcmBean publisherFcmBean = fcmMapper.getByUserID(articleBean.getUserID()+"");
+			
+			JSONObject jsonBody = new JSONObject();
+			
+			String pushType = Data.PUSH_TYPE_NEW_COMMENT+"";
+			String idx=articleBean.getArticleID()+"";
+			String title = "댓글이 달렸어요";
+			String body=userBean.getLastName()+" "+userBean.getFirstName()+"님께서 [";
+			
+			if(articleBean.getTitle()!=null && articleBean.getContents().length()>0) {
+				if(articleBean.getTitle().length()>10) {
+					body+=articleBean.getTitle().substring(0,  10)+"...] 글에 댓글을 달았습니다";
+				}else {
+					body+=articleBean.getTitle()+"] 글에 댓글을 달았습니다";
+				}
+			}else {
+				if(articleBean.getContents().length()>10) {
+					body+=articleBean.getContents().substring(0,  10)+"...] 글에 댓글을 달았습니다";
+				}else {
+					body+=articleBean.getContents()+"] 글에 댓글을 달았습니다";
+				}
+			}
+			
+			body+=" ["+commentBean.getContents()+"]";
+			
+			jsonBody.put("to", publisherFcmBean.getFcmToken());
+			
+			if(publisherFcmBean.getDeviceType() == Data.DEVICE_TYPE_ANDROID) {
+				JSONObject data = new JSONObject();
+				data.put("title", title);
+				data.put("body", body);
+				data.put("pushType", pushType);
+				data.put("idx", idx);
+				
+				jsonBody.put("data", data);
+			}else if(publisherFcmBean.getDeviceType()==Data.DEVICE_TYPE_IOS) {
+				JSONObject notification=new JSONObject();
+				notification.put("title", title);
+				notification.put("body", body);
+				notification.put("pushType", pushType);
+				notification.put("idx", idx);
+				
+				jsonBody.put("notification", notification);
+				
+			}
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(new MediaType("application","json",Charset.forName("UTF-8")));
+			
+			System.out.println("body : "+body.toString());
+			HttpEntity<String> request = new HttpEntity<>(jsonBody.toString(), headers);
+	
+		
+			CompletableFuture<String> pushNotification = PushNotificationService.send(request);
+			CompletableFuture.allOf(pushNotification).join();
+		}
+		/////////푸시 날리기 끝 ////////////////////////////////////
+		
 		
 		return result;
 	}
