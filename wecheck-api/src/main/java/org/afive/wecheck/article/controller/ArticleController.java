@@ -15,12 +15,15 @@ import org.afive.wecheck.article.bean.ArticleYouTubeBean;
 import org.afive.wecheck.article.mapper.ArticleFileMapper;
 import org.afive.wecheck.article.mapper.ArticleMapper;
 import org.afive.wecheck.article.mapper.ArticleYouTubeMapper;
+import org.afive.wecheck.comment.bean.CommentBean;
+import org.afive.wecheck.comment.bean.CommentResult;
 import org.afive.wecheck.comment.mapper.CommentMapper;
 import org.afive.wecheck.configuration.BaseTool;
 import org.afive.wecheck.configuration.Data;
 import org.afive.wecheck.configuration.MemberType;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.mapper.ArticleLikeMapper;
+import org.afive.wecheck.like.mapper.CommentLikeMapper;
 import org.afive.wecheck.user.bean.AccessTokenBean;
 import org.afive.wecheck.user.bean.ConfirmRequestBean;
 import org.afive.wecheck.user.bean.FcmBean;
@@ -65,6 +68,8 @@ public class ArticleController {
 	@Autowired
 	private ArticleYouTubeMapper articleYouTubeMapper;
 	
+	@Autowired
+	private CommentLikeMapper commentLikeMapper;
 //	//테스트용	
 //	@RequestMapping(value ="",method = RequestMethod.GET) 
 //	private Map<String, Object> getList(){
@@ -132,10 +137,11 @@ public class ArticleController {
 			ArticleBean articleBean = articleList.get(i);
 			ArticleResult articleResult = new ArticleResult(); 
 			int articleID = articleBean.getArticleID();
+			Integer publisherID = articleBean.getUserID();
 			
 			articleResult.setArticle(articleBean);
 			
-			UserBean publisherBean = userMapper.get(String.valueOf(userID));
+			UserBean publisherBean = userMapper.get(String.valueOf(publisherID));
 			
 			UserResult publisherResult = new UserResult();
 			publisherResult.setUserID(publisherBean.getUserID());
@@ -158,12 +164,39 @@ public class ArticleController {
 			checkMap.put("userID",userID);
 			checkMap.put("articleID",articleID);
 			
+			//눌렀는지 체크
 			Integer isChecked = articleLikeMapper.isCheckedByUserAndArticle(checkMap);
 			if(isChecked == null) {
 				isChecked = 0;
 			}
 			
 			articleResult.setLikeIsChecked(String.valueOf(isChecked));
+			
+			/*
+			 * 최신댓글 하나 추가
+			 */
+			CommentResult comment = new CommentResult();
+			CommentBean recentComment = commentMapper.getRecentComment(String.valueOf(articleID));
+			comment.setComment(recentComment);
+			
+			UserResult commenter = userMapper.getUserResult(String.valueOf(recentComment.getUserID()));
+			comment.setCommenter(commenter);
+			
+			commentCountMap.put("articleID",articleID);
+			commentCountMap.put("parentID",recentComment.getCommentID());
+			comment.setCommentCount(commentMapper.getCountByArticleAndParent(commentCountMap));
+			
+			comment.setLikeCount(commentLikeMapper.getCountByCommentID(String.valueOf(recentComment.getCommentID())));
+			
+			checkMap.put("commentID",recentComment.getCommentID());
+			Integer commentLikeIsChecked = commentLikeMapper.isCheckedByUserAndComment(checkMap);
+			if(commentLikeIsChecked == null) {
+				commentLikeIsChecked = 0;
+			}
+			comment.setLikeIsChecked(String.valueOf(commentLikeIsChecked));
+			
+			articleResult.setComment(comment);
+			
 			
 			List<ArticleFileBean> articleFileList = articleFileMapper.getByArticleID(String.valueOf(articleID));
 			List<ArticleYouTubeBean> youTubeList = articleYouTubeMapper.getListByArticleID(String.valueOf(articleID));
@@ -185,7 +218,9 @@ public class ArticleController {
 				articleResult.setThumbnail(true);
 				/* 첫번째 영상의 id값 */
 				String movieID = youTubeList.get(0).getMovieID();
-
+				
+				/* 첫번째 영상만 피드에서 재생 // 수정하려면 이부분을 수정해야함 */
+				articleResult.setMovieID(movieID);
 				/*
 				 * http://webdir.tistory.com/472 에 있는 내용을 근거로 한 섬네일
 				 */

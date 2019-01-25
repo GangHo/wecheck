@@ -41,6 +41,9 @@ public class Data {
 
 	public final static int PUSH_TYPE_CHURCHSERVICE = 10; // 예배시간에 대한 PUSH메세지 타입
 	
+	/*
+	 * http://webdir.tistory.com/472 에 있는 내용을 근거로 한 섬네일
+	 */
 	public final static String YOUTUBE_THUMBNAIL_PATH = "http://img.youtube.com/vi/";
 	public final static String YOUTUBE_THUMBNAIL_FORM = "/hqdefault.jpg"; //고품질
 }

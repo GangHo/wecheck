@@ -5,6 +5,8 @@ public class ArticleYouTubeBean {
 	private int articleID;
 	private String movieID;
 	private String registeredTime;
+	private int state;
+	private String deletedTime;
 	
 	public int getArticleYouTubeID() {
 		return articleYouTubeID;
@@ -29,5 +31,17 @@ public class ArticleYouTubeBean {
 	}
 	public void setRegisteredTime(String registeredTime) {
 		this.registeredTime = registeredTime;
-	}	
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
+	public String getDeletedTime() {
+		return deletedTime;
+	}
+	public void setDeletedTime(String deletedTime) {
+		this.deletedTime = deletedTime;
+	}
 }

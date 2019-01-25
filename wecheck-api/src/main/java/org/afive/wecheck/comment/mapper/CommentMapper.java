@@ -14,10 +14,9 @@ public interface CommentMapper extends CommonMapper<CommentBean,String>{
 	public void updateComment(HashMap<String,Object> map);
 	public void deleteComment(HashMap<String,Object> map);
 	/**
-	 * 
-	 * 
 	 * @return 댓글에대한 대댓글 수
 	 */
 	public String getCountByArticleAndParent(HashMap<String,Object> map);
  
+	public CommentBean getRecentComment(String articleID);
 }

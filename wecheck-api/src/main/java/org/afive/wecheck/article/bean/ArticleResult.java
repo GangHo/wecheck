@@ -1,5 +1,7 @@
 package org.afive.wecheck.article.bean;
 
+import org.afive.wecheck.comment.bean.CommentBean;
+import org.afive.wecheck.comment.bean.CommentResult;
 import org.afive.wecheck.user.bean.UserResult;
 
 public class ArticleResult {
@@ -10,6 +12,8 @@ public class ArticleResult {
 	private String likeIsChecked;
 	private String commentCount;
 	private String likeCount;
+	private CommentResult comment;
+	private String movieID;
 	
 	public UserResult getPublisher() {
 		return publisher;
@@ -53,5 +57,16 @@ public class ArticleResult {
 	public void setLikeCount(String likeCount) {
 		this.likeCount = likeCount;
 	}
-	
+	public CommentResult getComment() {
+		return comment;
+	}
+	public void setComment(CommentResult comment) {
+		this.comment = comment;
+	}
+	public String getMovieID() {
+		return movieID;
+	}
+	public void setMovieID(String movieID) {
+		this.movieID = movieID;
+	}
 }

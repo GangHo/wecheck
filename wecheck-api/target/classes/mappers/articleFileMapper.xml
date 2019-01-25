@@ -16,9 +16,9 @@
     </select>
     
     <select id="getByArticleID" parameterType="String" resultType = "org.afive.wecheck.article.bean.ArticleFileBean">
-  		SELECT  `articleFileID`,  `articleID`,  `fileType`, `articleFilePath`,
-  		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime
+  		SELECT  *
   		FROM	articleFile
-  		WHERE	articleID = #{articleID};
+  		WHERE	articleID = #{articleID}
+  		AND		state = 0;
   	</select>
 </mapper>

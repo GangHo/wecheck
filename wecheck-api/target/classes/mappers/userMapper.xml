@@ -15,6 +15,12 @@
   		WHERE	userID = #{userID};
     </select>
     
+    <select id="getUserResult" parameterType = "String" resultType="org.afive.wecheck.user.bean.UserResult">
+    	SELECT 	userID,userType,state,firstName,lastName,profileImage
+    	FROM	user
+    	WHERE	userID = #{userID};
+    </select>
+    
     <select id="getLoginUserBean" parameterType="String" resultType="org.afive.wecheck.user.bean.UserBean">
     	SELECT	*
     	FROM	user

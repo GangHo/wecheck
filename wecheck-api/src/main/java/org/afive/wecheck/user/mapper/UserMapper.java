@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.afive.wecheck.common.CommonMapper;
 import org.afive.wecheck.user.bean.UserBean;
+import org.afive.wecheck.user.bean.UserResult;
 
 public interface UserMapper extends CommonMapper<UserBean, String> {
 	
@@ -15,5 +16,5 @@ public interface UserMapper extends CommonMapper<UserBean, String> {
 	 */
 	public UserBean getLoginUserBean(UserBean userLoginBean);
 	public List<String> getIdByRegionAndUnit(HashMap<String,Object> map);
-//	public UserBean getUserByToken(String accessToeknID);
+	public UserResult getUserResult(String userID);
 }

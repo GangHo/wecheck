@@ -70,5 +70,17 @@
   		LIMIT	#{start},#{size};
   	</select>
   	
+  	<select id="getRecentComment" parameterType="String" resultType="org.afive.wecheck.comment.bean.CommentBean">
+		SELECT `commentID`,  `userID`,  `privacy`,  `articleID`,  `parentID`,  `contents`,`state`,
+		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime,
+		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
+		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
+    	FROM	comment
+    	WHERE	(articleID = #{articleID}
+    	AND		state = '0')
+    	order by registeredTime limit 1;
+    </select>
+
+  	
 
 </mapper>
