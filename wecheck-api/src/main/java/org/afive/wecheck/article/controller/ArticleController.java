@@ -78,13 +78,13 @@ public class ArticleController {
 //		return result;
 //	}
 	
-	@RequestMapping(value ="/{articleGroupID}/{pageNo}/{size}/{sort}/{privacy}/{regionID}/{unitID}",method = RequestMethod.GET) 
+	@RequestMapping(value ="/{articleGroupID}/{lastItemID}/{size}/{sort}/{privacy}/{regionID}/{unitID}",method = RequestMethod.GET) 
 	private Map<String, Object> getList(
 			@RequestHeader("Authorization") String accessTokenID,
 			@PathVariable(value = "articleGroupID") String articleGroupIDstr,
-			@PathVariable(value = "pageNo") String pageNoStr,
+			@PathVariable(value = "lastItemID") String lastItemIDStr,
 			@PathVariable(value = "size") String sizeStr,
-			@PathVariable(value = "sort") String sortStr,
+			@PathVariable(value = "sort") String sort,
 			@PathVariable(value = "privacy") String privacyStr,
 			@PathVariable(value = "regionID") String regionID,
 			@PathVariable(value = "unitID") String unitID
@@ -100,13 +100,10 @@ public class ArticleController {
 		
 //		System.out.println("articleGroupID : "+articleGroupIDstr+", pageNo : "+pageNoStr+", size : "+sizeStr+", sortStr : "+sortStr+", privacyStr : "+privacyStr+", regionID : "+regionID+", unitID : "+unitID);
 		
-		int pageNo=Integer.parseInt(pageNoStr);
+		int lastItemID = Integer.parseInt(lastItemIDStr);
 		int size = Integer.parseInt(sizeStr);
 		int privacy = Integer.parseInt(privacyStr);
 		int articleGroupID=Integer.parseInt(articleGroupIDstr);
-		
-		
-		pageNo=((pageNo-1)*size);
 		
 		List<ArticleBean> articleList;
 		
@@ -116,11 +113,12 @@ public class ArticleController {
 		//articleGroup으로 나눠져 있지 않
 		if(articleGroupID==0) {
 			
-			articleList=articleMapper.getList(privacy, pageNo, size);
+			articleList=articleMapper.getList(privacy,lastItemID, size, sort);
+			
 			
 		//articleGroup으로 나눠져있음
 		}else{
-			articleList=articleMapper.getListFromArticleGroup(articleGroupID, privacy, pageNo, size);
+			articleList=articleMapper.getListFromArticleGroup(articleGroupID, privacy,lastItemID, size, sort);
 		}
 		
 		
@@ -177,27 +175,31 @@ public class ArticleController {
 			 */
 			CommentResult comment = new CommentResult();
 			CommentBean recentComment = commentMapper.getRecentComment(String.valueOf(articleID));
-			comment.setComment(recentComment);
-			
-			UserResult commenter = userMapper.getUserResult(String.valueOf(recentComment.getUserID()));
-			comment.setCommenter(commenter);
-			
-			commentCountMap.put("articleID",articleID);
-			commentCountMap.put("parentID",recentComment.getCommentID());
-			comment.setCommentCount(commentMapper.getCountByArticleAndParent(commentCountMap));
-			
-			comment.setLikeCount(commentLikeMapper.getCountByCommentID(String.valueOf(recentComment.getCommentID())));
-			
-			checkMap.put("commentID",recentComment.getCommentID());
-			Integer commentLikeIsChecked = commentLikeMapper.isCheckedByUserAndComment(checkMap);
-			if(commentLikeIsChecked == null) {
-				commentLikeIsChecked = 0;
+			if(recentComment != null) { 
+				comment.setComment(recentComment);
+				
+				UserResult commenter = userMapper.getUserResult(String.valueOf(recentComment.getUserID()));
+				comment.setCommenter(commenter);
+				
+				commentCountMap.put("articleID",articleID);
+				commentCountMap.put("parentID",recentComment.getCommentID());
+				comment.setCommentCount(commentMapper.getCountByArticleAndParent(commentCountMap));
+				
+				comment.setLikeCount(commentLikeMapper.getCountByCommentID(String.valueOf(recentComment.getCommentID())));
+				
+				checkMap.put("commentID",recentComment.getCommentID());
+				Integer commentLikeIsChecked = commentLikeMapper.isCheckedByUserAndComment(checkMap);
+				if(commentLikeIsChecked == null) {
+					commentLikeIsChecked = 0;
+				}
+				comment.setLikeIsChecked(String.valueOf(commentLikeIsChecked));
+				articleResult.setComment(comment);
 			}
-			comment.setLikeIsChecked(String.valueOf(commentLikeIsChecked));
+			else {
+				articleResult.setComment(null);
+			}
 			
-			articleResult.setComment(comment);
-			
-			
+
 			List<ArticleFileBean> articleFileList = articleFileMapper.getByArticleID(String.valueOf(articleID));
 			List<ArticleYouTubeBean> youTubeList = articleYouTubeMapper.getListByArticleID(String.valueOf(articleID));
 			

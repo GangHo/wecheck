@@ -4,16 +4,22 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.afive.wecheck.article.mapper.ArticleMapper">
 
+<!-- &gt;= 는 >= , &lt; 는 < 를 의미 -->
 	<select id="getList"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
     	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
 		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
 		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
 		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
-		FROM article
-		WHERE #{privacy} >= privacy
-		ORDER by postedDate desc
-		limit #{pageNo}, #{size}
+		FROM	article
+		WHERE	privacy &lt;= #{privacy}
+		<if test = 'sort != null and sort.equals("0")'>
+			AND articleID &lt; #{lastItemID} order by postedDate desc
+		</if>
+		<if test = 'sort != null and sort.equals("1")'>
+			AND articleID &gt; #{lastItemID} order by postedDate
+		</if>
+		limit #{size}
 		;
 	</select>
 	
@@ -24,10 +30,15 @@
 		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
 		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
 		FROM article
-		WHERE (articleGroupID=#{articleGroupID} AND #{privacy} >= privacy
+		WHERE (articleGroupID=#{articleGroupID} AND #{privacy} &gt;= privacy
 		AND state = 0)
-		order by postedDate desc
-		limit #{pageNo}, #{size}
+		<if test = 'sort != null and sort.equals("0")'>
+			AND articleID &lt; #{lastItemID} order by postedDate desc
+		</if>
+		<if test = 'sort != null and sort.equals("1")'>
+			AND articleID &gt; #{lastItemID} order by postedDate
+		</if>
+		limit #{size}
 		;
 	</select>
 	

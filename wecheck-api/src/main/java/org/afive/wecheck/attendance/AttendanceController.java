@@ -20,6 +20,7 @@ import org.afive.wecheck.user.bean.RegionBean;
 import org.afive.wecheck.user.mapper.AccessTokenMapper;
 import org.afive.wecheck.user.mapper.RegionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -111,7 +112,7 @@ public class AttendanceController {
         result.put("distance", distanceMeter);
 
         /*-- 10미터안에 존 --*/
-        if(distanceMeter<10) {
+        if(distanceMeter<30) {
         	
         	AttendanceBean attendanceBean = attendanceMapper.getIfExists(churchServiceID, accessTokenBean.getUserID());
         	
@@ -143,9 +144,11 @@ public class AttendanceController {
 		return result;
 	}
 	
-	@RequestMapping(value="" , method = RequestMethod.GET)
+	@RequestMapping(value="/{lastItemID}/{size}" , method = RequestMethod.GET)
 	public Map<String,Object> getAttendance(
-			@RequestHeader("Authorization") String accessTokenID) {
+			@RequestHeader("Authorization") String accessTokenID ,
+			@PathVariable(value = "lastItemID") String lastItemIDStr ,
+			@PathVariable(value = "size") String sizeStr) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -158,11 +161,27 @@ public class AttendanceController {
 			return result;
 		}
 		
-		int userID = accessTokenBean.getUserID();
+		Integer userID = accessTokenBean.getUserID();
+		int lastItemID = Integer.parseInt(lastItemIDStr);
+		int size = Integer.parseInt(sizeStr);
 		
-		List<AttendanceBean> attendanceBeanList = attendanceMapper.getAttendanceByUserID(String.valueOf(userID));
+		HashMap<String,Object> attendanceMap = new HashMap<>();
+		attendanceMap.put("userID",userID);
+		attendanceMap.put("lastItemID",lastItemID);
+		attendanceMap.put("size",size);
+		List<AttendanceResult> attendanceList = attendanceMapper.getAttendanceList(attendanceMap);
 		
+		//출석횟수 계산
+		int attendanceCount = 0;
+		for(int i=0; i<attendanceList.size(); i++) {
+			if(attendanceList.get(i).getAttendanceID()!=null) {
+				attendanceCount += 1;
+			}
+		}
 		
+		result.put("attendanceList", attendanceList);
+		result.put("attendanceCount", attendanceCount);
+		result.put("responseCode", ResponseCode.SUCCESS);
 		return result;
 	}
 }

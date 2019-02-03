@@ -46,8 +46,7 @@ public class ArticleGroupController {
 	
 	@Autowired
 	private ArticleMapper articleMapper;
-	
-	//테스트용	
+
 	@RequestMapping(value ="",method = RequestMethod.GET) 
 	private Map<String, Object> getMainGroupList(
 			@RequestHeader("Authorization") String accessTokenID
@@ -67,7 +66,7 @@ public class ArticleGroupController {
 		 * 수정 by gangho
 		 */
 		for(int i=0;i<list.size();i++) {
-			list.get(i).setArticleList(articleMapper.getListFromArticleGroup(list.get(i).getArticleGroupID(), 0, 0, 3));
+			list.get(i).setArticleList(articleMapper.getListFromArticleGroup(list.get(i).getArticleGroupID(), 0, 0, 3,"0"));
 		}
 		
 		result.put("groups", list);

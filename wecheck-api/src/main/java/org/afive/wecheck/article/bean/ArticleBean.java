@@ -14,6 +14,7 @@ public class ArticleBean {
 	private String contents;
 	private int regionID;
 	private int unitID;
+	
 	public int getArticleID() {
 		return articleID;
 	}

@@ -58,16 +58,23 @@
   	
   	</select>
   	
+  	<!-- &gt;= 는 >= , &lt; 는 < 를 의미 -->
   	<select id="getListByArticleAndParent" parameterType="hashmap" resultType = "org.afive.wecheck.comment.bean.CommentBean">
 		SELECT `commentID`,  `userID`,  `privacy`,  `articleID`,  `parentID`,  `contents`,`state`,
 		DATE_FORMAT(registeredTime,'%Y-%m-%d %H:%i:%s') as registeredTime,
 		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
 		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
   		FROM	comment
-  		WHERE	(parentID = #{parentID}
-  		AND		articleID = #{articleID})
-  		Order by	commentID 
-  		LIMIT	#{start},#{size};
+  		WHERE	parentID = #{parentID}
+  		AND		articleID = #{articleID}
+  		AND 	privacy &lt;= #{privacy}
+  		<if test = 'sort != null and sort.equals("0")'>
+			AND commentID &lt; #{lastItemID} order by registeredTime desc
+		</if>
+		<if test = 'sort != null and sort.equals("1")'>
+			AND commentID &gt; #{lastItemID} order by registeredTime
+		</if>
+  		LIMIT	#{size};
   	</select>
   	
   	<select id="getRecentComment" parameterType="String" resultType="org.afive.wecheck.comment.bean.CommentBean">

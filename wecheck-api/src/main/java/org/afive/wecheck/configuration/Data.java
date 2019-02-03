@@ -14,6 +14,7 @@ public class Data {
 	public static final int PUSH_TYPE_COMMENT_LIKE=2;
 	public static final int PUSH_TYPE_NEW_COMMENT=3;
 	public static final int PUSH_TYPE_NEW_SUB_COMMENT=4;
+	public final static int PUSH_TYPE_CHURCHSERVICE = 10; // 예배시간에 대한 PUSH메세지 타입
 	
 	public static final int PUSH_IDX_ACCEPTED=1; //0에서1로 수정함
 	public static final int PUSH_IDX_DENIED=2; //1에서2로 수정함
@@ -42,8 +43,6 @@ public class Data {
 	
 	public final static int ARTICLELIKE_DEFAULT = 0;
 	public final static int ARTICLELIKE_CHECKED = 1;
-
-	public final static int PUSH_TYPE_CHURCHSERVICE = 10; // 예배시간에 대한 PUSH메세지 타입
 	
 	/*
 	 * http://webdir.tistory.com/472 에 있는 내용을 근거로 한 섬네일

@@ -65,13 +65,15 @@ public class CommentController {
 	@Autowired
 	private FcmMapper fcmMapper;
 	
-	@RequestMapping(value ="/{articleID}/{parentID}/{pageNo}/{size}",method = RequestMethod.GET)
+	@RequestMapping(value ="/{articleID}/{parentID}/{lastItemID}/{size}/{sort}/{privacy}",method = RequestMethod.GET)
 	private Map<String,Object> getComment(
 			@RequestHeader("Authorization") String accessTokenID ,
 			@PathVariable(value = "articleID") String articleID ,
 			@PathVariable(value = "parentID") String parentID ,
-			@PathVariable(value = "pageNo") String pageNoStr ,
-			@PathVariable(value = "size") String sizeStr) {
+			@PathVariable(value = "lastItemID") String lastItemIDStr ,
+			@PathVariable(value = "size") String sizeStr ,
+			@PathVariable(value = "sort") String sort ,
+			@PathVariable(value = "privacy") String privacyStr) {
 		
 		Map<String,Object> result = new HashMap<String,Object>();
 		
@@ -123,14 +125,16 @@ public class CommentController {
 //		}
 		
 		
-		int pageNo=Integer.parseInt(pageNoStr);
+		int lastItemID = Integer.parseInt(lastItemIDStr);
 		int parentSize = Integer.parseInt(sizeStr);
-		int start=((pageNo-1)* parentSize);
+		int privacy = Integer.parseInt(privacyStr);
 		
 		HashMap<String,Object> commentMap = new HashMap<String,Object>();
 		commentMap.put("articleID", articleID);
 		commentMap.put("parentID", parentID);
-		commentMap.put("start", start);
+		commentMap.put("lastItemID", lastItemID);
+		commentMap.put("sort",sort);
+		commentMap.put("privacy",privacy);
 		commentMap.put("size", parentSize);
 		
 		List<CommentBean> commentList = commentMapper.getListByArticleAndParent(commentMap);

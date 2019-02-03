@@ -16,5 +16,5 @@ public interface AttendanceMapper extends CommonMapper<AttendanceBean,String>{
 	/*
 	 * 2019-01-19 by gangho
 	 */
-	public List<AttendanceBean> getAttendanceByUserID(String userID);
+	public List<AttendanceResult> getAttendanceList(HashMap<String,Object> map);
 }

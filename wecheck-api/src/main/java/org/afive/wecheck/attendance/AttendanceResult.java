@@ -1,15 +1,30 @@
 package org.afive.wecheck.attendance;
 
 public class AttendanceResult { 
-	private AttendanceBean attendance;
+	private Integer attendanceID;
+	private int churchServiceID;
+	private int churchServiceState;
 	private String regionName;
 	private String unitName;
 	private String startTime;
-	public AttendanceBean getAttendance() {
-		return attendance;
+	
+	public Integer getAttendanceID() {
+		return attendanceID;
 	}
-	public void setAttendance(AttendanceBean attendance) {
-		this.attendance = attendance;
+	public void setAttendanceID(Integer attendanceID) {
+		this.attendanceID = attendanceID;
+	}
+	public int getChurchServiceID() {
+		return churchServiceID;
+	}
+	public void setChurchServiceID(int churchServiceID) {
+		this.churchServiceID = churchServiceID;
+	}
+	public int getChurchServiceState() {
+		return churchServiceState;
+	}
+	public void setChurchServiceState(int churchServiceState) {
+		this.churchServiceState = churchServiceState;
 	}
 	public String getRegionName() {
 		return regionName;
@@ -30,6 +45,5 @@ public class AttendanceResult {
 		this.startTime = startTime;
 	}
 	
-	
-	
+
 }

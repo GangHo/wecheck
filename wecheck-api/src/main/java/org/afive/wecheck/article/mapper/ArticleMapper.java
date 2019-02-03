@@ -15,8 +15,8 @@ public interface ArticleMapper extends CommonMapper<ArticleBean, String>{
 	/**
 	 * @return
 	 */
-	public List<ArticleBean> getList(@Param("privacy") int privacy,@Param("pageNo") int pageNo, @Param("size") int size);
-	public List<ArticleBean> getListFromArticleGroup(@Param("articleGroupID") int articleGroupID,@Param("privacy") int privacy,@Param("pageNo") int pageNo, @Param("size") int size);
+	public List<ArticleBean> getList(@Param("privacy") int privacy,@Param("lastItemID") int lastItemID, @Param("size") int size, @Param("sort") String sort);
+	public List<ArticleBean> getListFromArticleGroup(@Param("articleGroupID") int articleGroupID,@Param("privacy") int privacy,@Param("lastItemID") int lastItemID, @Param("size") int size, @Param("sort") String sort);
 	public ArticleBean get(String articleID);
 	//	public FcmBean getBySnsLoginID(String snsLoginID);
 //	public void registerWithOutUserID(FcmBean fcmBean);

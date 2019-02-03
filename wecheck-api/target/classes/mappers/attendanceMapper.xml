@@ -25,7 +25,7 @@
     	INSERT INTO attendance 
     		(churchServiceID, userID, attendanceTime)
     	VALUES
-    		(#{churchServiceID}, #{userID}, #{attandanceTime});
+    		(#{churchServiceID}, #{userID}, #{attendanceTime});
     </insert>
   	  	
   	<select id="checkAttendance" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceBean">
@@ -35,10 +35,27 @@
   		AND		churchServiceID = #{churchServiceID};
   	</select>
   	
-  	<select id="getAttendanceByUserID" parameterType="String" resultType = "org.afive.wecheck.attendance.AttendanceBean">
-  		SELECT	*
-  		FROM	attendance
-  		WHERE	userID = #{userID};
+  	<select id="getAttendanceList" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceResult">
+  		SELECT	attendance.attendanceID,
+  				churchService.churchServiceID,
+  				churchService.state as churchServiceState,
+  				DATE_FORMAT(churchService.startTime,'%Y-%m-%d %H:%i:%s') as startTime,
+  				region.regionName,
+  				unit.unitName
+		FROM	churchService
+		INNER JOIN region ON churchService.regionID = region.regionID
+		INNER JOIN unit ON churchService.unitID = unit.unitID
+		INNER JOIN user ON churchService.regionID = user.regionID
+			AND churchService.unitID = user.unitID 
+			AND user.userID = #{userID}
+			AND now() &gt; churchService.endTime
+			AND churchService.churchServiceID &lt; #{lastItemID}
+		LEFT JOIN attendance ON attendance.churchServiceID = churchService.churchServiceID
+			AND attendance.userID = #{userID}
+			order by startTime desc
+			limit #{size}
+			;
+			
   	</select>
 
 </mapper>
