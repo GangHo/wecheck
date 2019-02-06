@@ -12,7 +12,7 @@
 		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
 		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
 		FROM	article
-		WHERE	privacy &lt;= #{privacy}
+		WHERE	privacy &lt;= #{privacy} AND state = 0
 		<if test = 'sort != null and sort.equals("0")'>
 			AND articleID &lt; #{lastItemID} order by postedDate desc
 		</if>
