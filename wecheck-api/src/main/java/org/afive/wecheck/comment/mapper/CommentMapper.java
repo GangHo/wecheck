@@ -9,7 +9,7 @@ import org.afive.wecheck.common.CommonMapper;
 
 public interface CommentMapper extends CommonMapper<CommentBean,String>{
 	
-	public String getTotalCountByArticleID(String articleID);
+	public String getCountByArticleID(String articleID);
 	public List<CommentBean> getListByArticleAndParent(HashMap<String,Object> map);
 	public void updateComment(HashMap<String,Object> map);
 	public void deleteComment(HashMap<String,Object> map);

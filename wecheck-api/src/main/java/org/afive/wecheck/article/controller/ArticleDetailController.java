@@ -186,7 +186,7 @@ public class ArticleDetailController {
 		String articleLikeCount = articleLikeMapper.getCountByArticleID(String.valueOf(articleBean.getArticleID()));
 		result.put("likeCount",articleLikeCount);
 
-		String commentCount = commentMapper.getTotalCountByArticleID(articleID);
+		String commentCount = commentMapper.getCountByArticleID(articleID);
 		result.put("commentCount",commentCount);
 		
 		result.put("responseCode", ResponseCode.SUCCESS);

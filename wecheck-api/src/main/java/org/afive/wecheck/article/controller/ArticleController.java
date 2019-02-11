@@ -156,7 +156,7 @@ public class ArticleController {
 			articleResult.setLikeCount(articleLikeCount);
 			
 			//댓글 수
-			String commentCount = commentMapper.getTotalCountByArticleID(String.valueOf(articleID));	
+			String commentCount = commentMapper.getCountByArticleID(String.valueOf(articleID));	
 			articleResult.setCommentCount(commentCount);
 			
 			checkMap.put("userID",userID);

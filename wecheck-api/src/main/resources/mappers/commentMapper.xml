@@ -42,11 +42,13 @@
     	WHERE	commentID = #{commentID};
     </update>
     
-    <!--	댓글,대댓글 포함한 댓글개수 카운팅		-->
+    <!--	(only) 부모댓글개수 카운팅		-->
     <select id="getTotalCountByArticleID" resultType = "String">
   		SELECT	COUNT(*)
   		FROM	comment
-  		WHERE	articleID = #{articleID};
+  		WHERE	articleID = #{articleID}
+  		AND		parentID = 0
+  		AND		state = 0;
   	</select>
   	
   	<!-- 	댓글에 대한 대댓글 개수 카운팅		-->
@@ -54,7 +56,8 @@
   		SELECT	COUNT(*)
   		FROM	comment
   		WHERE	articleID = #{articleID}
-  		AND		parentID = #{parentID};
+  		AND		parentID = #{parentID}
+  		AND		state = 0;
   	
   	</select>
   	

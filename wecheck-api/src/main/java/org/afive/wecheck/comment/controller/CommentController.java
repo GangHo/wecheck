@@ -280,7 +280,7 @@ public class CommentController {
 		
 		if(commentBean.getParentID() == 0) {
 			//부모 댓글 개수
-			String commentCount = commentMapper.getTotalCountByArticleID(articleID);
+			String commentCount = commentMapper.getCountByArticleID(articleID);
 			commentResult.setCommentCount(commentCount);
 		}
 		else {
