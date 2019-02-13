@@ -27,7 +27,7 @@
   	  	<!--  '&gt;' 는 '>' 기호   -->
   	<update id="changeStateToEnd">
   		UPDATE	banner
-  		SET		state = '2'
+  		SET		state = '1'
   		WHERE	state = '0' and (now() &gt; endTime);
   	</update>
   	

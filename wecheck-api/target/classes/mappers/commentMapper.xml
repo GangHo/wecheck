@@ -43,7 +43,7 @@
     </update>
     
     <!--	(only) 부모댓글개수 카운팅		-->
-    <select id="getTotalCountByArticleID" resultType = "String">
+    <select id="getCountByArticleID" resultType = "String">
   		SELECT	COUNT(*)
   		FROM	comment
   		WHERE	articleID = #{articleID}
