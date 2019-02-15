@@ -362,6 +362,66 @@ public class CommentController {
 			CompletableFuture<String> pushNotification = PushNotificationService.send(request);
 			CompletableFuture.allOf(pushNotification).join();
 		}
+		
+		/*
+		 * add by gangho 2/13
+		 */
+		if(!parentID.equals("0")) {
+			CommentBean parentComment = commentMapper.get(parentID);
+			
+			if(parentComment != null && parentComment.getUserID() !=userID) {
+				//UserBean userBean = userMapper.get(userID+"");
+				FcmBean parentCommenterFcmBean = fcmMapper.getByUserID(parentComment.getUserID()+"");
+				
+				JSONObject jsonBody = new JSONObject();
+				
+				String pushType = Data.PUSH_TYPE_NEW_SUB_COMMENT+"";
+				String idx=parentID;
+				String title = "답글이 달렸어요";
+				String body=commenterBean.getLastName()+" "+commenterBean.getFirstName()+"님께서 [";
+				
+				
+				if(parentComment.getContents().length() > 10) {
+					body+=parentComment.getContents().substring(0, 10)+"...] 댓글에 답글을 달았습니다";
+				} else {
+					body+=parentComment.getContents()+"] 글에 답글을 달았습니다";
+				}
+				
+				body+=" ["+commentBean.getContents()+"]";
+				
+				jsonBody.put("to", parentCommenterFcmBean.getFcmToken());
+				
+				if(parentCommenterFcmBean.getDeviceType() == Data.DEVICE_TYPE_ANDROID) {
+					JSONObject data = new JSONObject();
+					data.put("title", title);
+					data.put("body", body);
+					data.put("pushType", pushType);
+					data.put("idx", idx);
+					
+					jsonBody.put("data", data);
+				}else if(parentCommenterFcmBean.getDeviceType()==Data.DEVICE_TYPE_IOS) {
+					JSONObject notification=new JSONObject();
+					notification.put("title", title);
+					notification.put("body", body);
+					notification.put("pushType", pushType);
+					notification.put("idx", idx);
+					
+					jsonBody.put("notification", notification);
+					
+				}
+				
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(new MediaType("application","json",Charset.forName("UTF-8")));
+				
+				System.out.println("body : "+body.toString());
+				HttpEntity<String> request = new HttpEntity<>(jsonBody.toString(), headers);
+		
+			
+				CompletableFuture<String> pushNotification = PushNotificationService.send(request);
+				CompletableFuture.allOf(pushNotification).join();
+			}
+		}
+		
 		/////////푸시 날리기 끝 ////////////////////////////////////
 		
 		

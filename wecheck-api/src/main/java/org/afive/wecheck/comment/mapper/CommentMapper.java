@@ -19,4 +19,5 @@ public interface CommentMapper extends CommonMapper<CommentBean,String>{
 	public String getCountByArticleAndParent(HashMap<String,Object> map);
  
 	public CommentBean getRecentComment(String articleID);
+
 }

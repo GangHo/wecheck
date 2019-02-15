@@ -18,7 +18,8 @@
 		DATE_FORMAT(lastEditedTime,'%Y-%m-%d %H:%i:%s') as lastEditedTime,
 		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
     	FROM	comment
-    	WHERE	commentID = #{commentID};
+    	WHERE	commentID = #{commentID}
+    	AND		state = '0';
     </select>
     
     <insert id="register" parameterType="org.afive.wecheck.comment.bean.CommentBean" useGeneratedKeys="true" keyProperty="commentID">
