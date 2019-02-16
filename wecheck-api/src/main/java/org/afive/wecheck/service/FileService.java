@@ -55,7 +55,8 @@ public class FileService {
     	boolean check = false;
     	
     	filePath=filePath.replace("http://we-check.org", "");
-    	filePath="/usr/local/tomcat"+filePath;
+    	filePath=FilePathResource.COMMON_PATH+filePath;
+ //   	filePath="/usr/local/tomcat"+filePath;
     	
     	System.out.println("path 변경시킴 : "+filePath);
     	File file2 = new File(filePath);

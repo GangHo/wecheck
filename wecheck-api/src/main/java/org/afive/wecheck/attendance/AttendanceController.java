@@ -111,8 +111,8 @@ public class AttendanceController {
         
         result.put("distance", distanceMeter);
 
-        /*-- 10미터안에 존 --*/
-        if(distanceMeter<30) {
+        /*-- 40미터안에 존 --*/
+        if(distanceMeter< Data.ATTENDANCE_DISTANCE_METER) {
         	
         	AttendanceBean attendanceBean = attendanceMapper.getIfExists(churchServiceID, accessTokenBean.getUserID());
         	

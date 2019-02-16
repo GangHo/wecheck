@@ -66,7 +66,7 @@ public class ConfirmRequestController {
 		
 		System.out.println("accessToken 잘 있다."+accessTokenBean.getAccessTokenID());
 		
-		int confirmRequestID=accessTokenBean.getConfirmRequestID();
+		Integer confirmRequestID=accessTokenBean.getConfirmRequestID();
 		
 		System.out.println("confirmRequestID : "+confirmRequestID);
 		

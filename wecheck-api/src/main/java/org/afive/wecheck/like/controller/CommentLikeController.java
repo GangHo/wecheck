@@ -125,10 +125,24 @@ public class CommentLikeController {
 			UserBean userBean = userMapper.get(userID+"");
 			FcmBean publisherFcmBean = fcmMapper.getByUserID(commentBean.getUserID()+"");
 			
+			if(publisherFcmBean == null) {
+				System.out.println("publisher fcmBean 을 불러오지 못함");
+				result.put("responseCode", ResponseCode.SUCCESS);
+				
+				return result;
+			}
+			
 			JSONObject jsonBody = new JSONObject();
 			
 			String pushType = Data.PUSH_TYPE_COMMENT_LIKE+"";
-			String idx=commentBean.getCommentID()+"";
+			
+			String idx = null;
+			if(commentBean.getParentID() == 0) {
+				 idx = commentBean.getCommentID()+"";
+			}
+			else {
+				 idx = commentBean.getParentID()+"";
+			}
 			String title = "좋아요가 눌렸어요 💕";
 			String body=userBean.getLastName()+" "+userBean.getFirstName()+"님께서 [";
 			

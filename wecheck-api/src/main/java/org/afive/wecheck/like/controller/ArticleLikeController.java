@@ -68,11 +68,11 @@ public class ArticleLikeController {
 		Integer userID = accessTokenBean.getUserID();
 		
 		
-		if(userID == null) {
-			System.out.println("userID 없는 사람이 articleID : "+articleID+" 에 Like시도");
-			result.put("responseCode", ResponseCode.ACCESS_DENIED_USERID_DOESNT_MATCH);
-			return result;
-		}
+//		if(userID == null) {
+//			System.out.println("userID 없는 사람이 articleID : "+articleID+" 에 Like시도");
+//			result.put("responseCode", ResponseCode.ACCESS_DENIED_USERID_DOESNT_MATCH);
+//			return result;
+//		}
 		
 		/*
 		 * article 상태에 대한 처리
@@ -127,6 +127,13 @@ public class ArticleLikeController {
 		if(isChecked==0 && articleBean.getUserID()!=userID) {
 			UserBean userBean = userMapper.get(userID+"");
 			FcmBean publisherFcmBean = fcmMapper.getByUserID(articleBean.getUserID()+"");
+
+			if(publisherFcmBean == null) {
+				System.out.println("publisher fcmBean 을 불러오지 못함");
+				result.put("responseCode", ResponseCode.SUCCESS);
+				
+				return result;
+			}
 			
 			JSONObject jsonBody = new JSONObject();
 			

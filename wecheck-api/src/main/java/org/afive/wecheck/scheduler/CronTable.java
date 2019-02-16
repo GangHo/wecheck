@@ -68,12 +68,15 @@ public class CronTable {
 			System.out.println("알림 가는시간 : " +new SimpleDateFormat("hh:mm:ss").format(new Date()));
 			System.out.println("예배시간인 곳이 있습니다");
 			
-			String title = "예배시간입니다";
-			String body = "GPS를 켜 주세요!";
+//			String title = "예배시간입니다";
+//			String body = "GPS를 켜 주세요!";
 			
 			for(int i=0; i<churchServiceList.size(); i++) {
 				ChurchServiceBean churchServiceBean = null;
 				churchServiceBean = churchServiceList.get(i);
+				
+				String title = "예배시간입니다 :D";
+				String body = "GPS를 켜 주세요~";
 				
 				System.out.println("예배ID : " +churchServiceBean.getChurchServiceID());
 				System.out.println("실제 시작시간 : "+churchServiceBean.getStartTime());

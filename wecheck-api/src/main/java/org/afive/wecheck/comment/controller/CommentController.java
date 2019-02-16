@@ -298,15 +298,21 @@ public class CommentController {
 		
 		commentResult.setLikeCount(String.valueOf(0));
 		result.put("comment", commentResult);
-		result.put("responseCode", ResponseCode.SUCCESS);
-		
+
 		/*
 		 * 이제 댓 푸시 날리는거 할것이다./////////////////////////////
 		 * */
 		
-		if(articleBean.getUserID()!=userID) {
+		if(parentID.equals("0") && articleBean.getUserID()!=userID) {
 			UserBean userBean = userMapper.get(userID+"");
 			FcmBean publisherFcmBean = fcmMapper.getByUserID(articleBean.getUserID()+"");
+			
+			if(publisherFcmBean == null) {
+				System.out.println("publisher fcmBean 을 불러오지 못함");
+				result.put("responseCode", ResponseCode.SUCCESS);
+				
+				return result;
+			}
 			
 			JSONObject jsonBody = new JSONObject();
 			
@@ -364,14 +370,21 @@ public class CommentController {
 		}
 		
 		/*
-		 * add by gangho 2/13
+		 * add by gangho 2/13 대댓글
 		 */
-		if(!parentID.equals("0")) {
+		if(!parentID.equals("0") && articleBean.getUserID() != userID) {
 			CommentBean parentComment = commentMapper.get(parentID);
 			
 			if(parentComment != null && parentComment.getUserID() !=userID) {
 				//UserBean userBean = userMapper.get(userID+"");
 				FcmBean parentCommenterFcmBean = fcmMapper.getByUserID(parentComment.getUserID()+"");
+				
+				if(parentCommenterFcmBean == null) {
+					System.out.println("publisher fcmBean 을 불러오지 못함");
+					result.put("responseCode", ResponseCode.SUCCESS);
+					
+					return result;
+				}
 				
 				JSONObject jsonBody = new JSONObject();
 				
@@ -424,7 +437,7 @@ public class CommentController {
 		
 		/////////푸시 날리기 끝 ////////////////////////////////////
 		
-		
+		result.put("responseCode", ResponseCode.SUCCESS);
 		return result;
 	}
 	
@@ -446,7 +459,7 @@ public class CommentController {
 			return result;
 		}
 		
-		int userID = accessTokenBean.getUserID();
+		Integer userID = accessTokenBean.getUserID();
 		CommentBean parentBean = commentMapper.get(commentID);
 		int commenterID = parentBean.getUserID();
 		

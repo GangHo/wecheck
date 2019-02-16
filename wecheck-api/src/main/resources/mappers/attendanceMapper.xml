@@ -48,8 +48,8 @@
 		INNER JOIN user ON churchService.regionID = user.regionID
 			AND churchService.unitID = user.unitID 
 			AND user.userID = #{userID}
-			AND now() &gt; churchService.endTime
 			AND churchService.churchServiceID &lt; #{lastItemID}
+			AND (churchService.state = 1 OR churchService.state = 2 OR churchService.state = 3)
 		LEFT JOIN attendance ON attendance.churchServiceID = churchService.churchServiceID
 			AND attendance.userID = #{userID}
 			order by startTime desc

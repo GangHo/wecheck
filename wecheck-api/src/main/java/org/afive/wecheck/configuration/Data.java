@@ -49,4 +49,6 @@ public class Data {
 	 */
 	public final static String YOUTUBE_THUMBNAIL_PATH = "http://img.youtube.com/vi/";
 	public final static String YOUTUBE_THUMBNAIL_FORM = "/hqdefault.jpg"; //고품질
+	
+	public final static int ATTENDANCE_DISTANCE_METER = 40;
 }
