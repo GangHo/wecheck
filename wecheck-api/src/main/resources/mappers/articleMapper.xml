@@ -7,17 +7,18 @@
 <!-- &gt;= 는 >= , &lt; 는 < 를 의미 -->
 	<select id="getList"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
-    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
-		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
-		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
-		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
-		FROM	article
-		WHERE	privacy &lt;= #{privacy} AND state = 0
+    	SELECT B.articleID, B.title, B.userID, B.state,A.name,B.articleGroupID, B.privacy,B.contents,  B.regionID, B.unitID,
+		DATE_FORMAT(B.postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(B.lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(B.deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
+		FROM	article B
+		INNER JOIN articleGroup A ON A.articleGroupID = B.articleGroupID
+		WHERE	B.privacy &lt;= #{privacy} AND B.state = 0
 		<if test = 'sort != null and sort.equals("0")'>
-			AND articleID &lt; #{lastItemID} order by postedDate desc
+			AND B.articleID &lt; #{lastItemID} order by B.postedDate desc
 		</if>
 		<if test = 'sort != null and sort.equals("1")'>
-			AND articleID &gt; #{lastItemID} order by postedDate
+			AND B.articleID &gt; #{lastItemID} order by B.postedDate
 		</if>
 		limit #{size}
 		;
@@ -25,30 +26,32 @@
 	
 	<select id="getListFromArticleGroup"
 		resultType="org.afive.wecheck.article.bean.ArticleBean">
-    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
-		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
-		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
-		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
-		FROM article
-		WHERE (articleGroupID=#{articleGroupID} AND #{privacy} &gt;= privacy
-		AND state = 0)
+    	SELECT B.articleID, B.title, B.userID, B.state,A.name,B.articleGroupID, B.privacy,B.contents,  B.regionID, B.unitID,
+		DATE_FORMAT(B.postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(B.lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(B.deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
+		FROM article B
+		INNER JOIN articleGroup A ON A.articleGroupID = B.articleGroupID
+		WHERE (B.articleGroupID=#{articleGroupID} AND #{privacy} &gt;= B.privacy
+		AND B.state = 0)
 		<if test = 'sort != null and sort.equals("0")'>
-			AND articleID &lt; #{lastItemID} order by postedDate desc
+			AND B.articleID &lt; #{lastItemID} order by B.postedDate desc
 		</if>
 		<if test = 'sort != null and sort.equals("1")'>
-			AND articleID &gt; #{lastItemID} order by postedDate
+			AND B.articleID &gt; #{lastItemID} order by B.postedDate
 		</if>
 		limit #{size}
 		;
 	</select>
 	
 	<select id="get"  parameterType="String" resultType="org.afive.wecheck.article.bean.ArticleBean">
-    	SELECT `articleID`, `title`, `userID`, `state`,`articleGroupID`, `privacy`,`contents`,  `regionID`, `unitID`,
-		DATE_FORMAT(postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
-		DATE_FORMAT(lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
-		DATE_FORMAT(deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
-    	FROM	article
-  		WHERE	articleID = #{articleID};
+    	SELECT B.articleID, B.title, B.userID, B.state,A.name,B.articleGroupID, B.privacy,B.contents,  B.regionID, B.unitID,
+		DATE_FORMAT(B.postedDate,'%Y-%m-%d %H:%i:%s') as postedDate,
+		DATE_FORMAT(B.lastEditedDate,'%Y-%m-%d %H:%i:%s') as lastEditedDate,
+		DATE_FORMAT(B.deletedTime,'%Y-%m-%d %H:%i:%s') as deletedTime
+		FROM article B
+		INNER JOIN articleGroup A ON A.articleGroupID = B.articleGroupID
+  		WHERE	B.articleID = #{articleID};
   	</select>
 
 	<!-- <select id="get" parameterType="String"

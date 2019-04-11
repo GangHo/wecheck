@@ -20,6 +20,9 @@ public class FileService {
     public FileBean upload(MultipartFile upLoadFile, String path, String key) throws IllegalStateException, IOException{
         File dir = new File(path);
 
+        if (upLoadFile == null) {
+        	return null;
+        }
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -63,7 +66,8 @@ public class FileService {
     	if(file2.exists()) {
     		System.out.println("파일 존재합니당");
     		check = file2.delete();
-    	}else {
+    	}else { 
+    		
     		System.out.println("파일 존재 안하구");
     	}
     	

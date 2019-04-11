@@ -15,6 +15,7 @@ import org.afive.wecheck.comment.bean.CommentBean;
 import org.afive.wecheck.comment.bean.CommentResult;
 import org.afive.wecheck.comment.mapper.CommentMapper;
 import org.afive.wecheck.configuration.Data;
+import org.afive.wecheck.configuration.MemberType;
 import org.afive.wecheck.configuration.ResponseCode;
 import org.afive.wecheck.like.mapper.CommentLikeMapper;
 import org.afive.wecheck.service.PushNotificationService;
@@ -322,14 +323,14 @@ public class CommentController {
 			String body=userBean.getLastName()+" "+userBean.getFirstName()+"님께서 [";
 			
 			if(articleBean.getTitle()!=null && articleBean.getContents().length()>0) {
-				if(articleBean.getTitle().length()>10) {
-					body+=articleBean.getTitle().substring(0,  10)+"...] 글에 댓글을 달았습니다";
+				if(articleBean.getTitle().length()>20) {
+					body+=articleBean.getTitle().substring(0,  20)+"...] 글에 댓글을 달았습니다";
 				}else {
 					body+=articleBean.getTitle()+"] 글에 댓글을 달았습니다";
 				}
 			}else {
-				if(articleBean.getContents().length()>10) {
-					body+=articleBean.getContents().substring(0,  10)+"...] 글에 댓글을 달았습니다";
+				if(articleBean.getContents().length()>20) {
+					body+=articleBean.getContents().substring(0,  20)+"...] 글에 댓글을 달았습니다";
 				}else {
 					body+=articleBean.getContents()+"] 글에 댓글을 달았습니다";
 				}
@@ -394,8 +395,8 @@ public class CommentController {
 				String body=commenterBean.getLastName()+" "+commenterBean.getFirstName()+"님께서 [";
 				
 				
-				if(parentComment.getContents().length() > 10) {
-					body+=parentComment.getContents().substring(0, 10)+"...] 댓글에 답글을 달았습니다";
+				if(parentComment.getContents().length() > 20) {
+					body+=parentComment.getContents().substring(0, 20)+"...] 댓글에 답글을 달았습니다";
 				} else {
 					body+=parentComment.getContents()+"] 글에 답글을 달았습니다";
 				}
@@ -502,29 +503,34 @@ public class CommentController {
 			return result;
 		}
 		
-		int userID = accessTokenBean.getUserID();
-		CommentBean parentBean = commentMapper.get(commentID);
-		int commenterID = parentBean.getUserID();
+		Integer userID = accessTokenBean.getUserID();
+		UserBean userBean = userMapper.get(String.valueOf(userID));
+		CommentBean commentBean = commentMapper.get(commentID);
+		Integer commenterID = commentBean.getUserID();
 		
 		/**
-		 *  접근자와 댓글 작성자가 같은지 판별
+		 *  접근자 userType이 Manager(5) 이상인 경우 or 접근자와 댓글작성자가 같은경우 삭제가능
 		 */
-		if(commenterID != userID) {
-			result.put("responseCode", ResponseCode.ACCESS_DENIED_USERID_DOESNT_MATCH);
-			return result;
+		if(userBean.getUserType() >= MemberType.MEMBER_TYPE_MANAGER
+				|| commenterID == userID) {
+			HashMap<String,Object> map = new HashMap<String,Object>();
+			map.put("commentID", commentID);
+			map.put("state",Data.COMMENT_STATE_DELETED);
+			String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+			map.put("deletedTime",localDateTime);
+			
+			commentMapper.deleteComment(map);
+			
+			result.put("deletedComment",map);
+			result.put("responseCode",ResponseCode.SUCCESS);
+		}
+		else {
+				result.put("responseCode", ResponseCode.ACCESS_DENIED_USERID_DOESNT_MATCH);
+				return result;
 		}
 		
-		HashMap<String,Object> map = new HashMap<String,Object>();
-		map.put("commentID", commentID);
-		map.put("state",Data.COMMENT_STATE_DELETED);
-		String localDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-		map.put("deletedTime",localDateTime);
-		
-		commentMapper.deleteComment(map);
-		
-		result.put("deletedComment",map);
-		result.put("responseCode",ResponseCode.SUCCESS);
 		return result;
+		
 	}
 	
 	/**

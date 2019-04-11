@@ -25,7 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class CronTable {
 	
 	@Autowired
@@ -61,6 +61,7 @@ public class CronTable {
 		if(churchServiceList.size() == 0) {
 			System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
 			System.out.println("예배시간인 곳이 없습니다.");
+//			System.out.println("[test server] 예배시간인 곳이 없습니다.");
 			return;
 			
 		}
@@ -177,6 +178,7 @@ public class CronTable {
 	public void checkBanners() {
 		System.out.println(new SimpleDateFormat("hh:mm:ss").format(new Date()));
 		System.out.println("Banner state check time");
+//		System.out.println("[test server] Banner state check time");
 		bannerMapper.changeStateToEnd();
 	}
 }

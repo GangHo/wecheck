@@ -143,14 +143,14 @@ public class ArticleLikeController {
 			String body=userBean.getLastName()+" "+userBean.getFirstName()+"님께서 [";
 			
 			if(articleBean.getTitle()!=null && articleBean.getContents().length()>0) {
-				if(articleBean.getTitle().length()>10) {
-					body+=articleBean.getTitle().substring(0,  10)+"...] 글에 좋아요를 눌렀습니다";
+				if(articleBean.getTitle().length()>20) {
+					body+=articleBean.getTitle().substring(0, 20)+"...] 글에 좋아요를 눌렀습니다";
 				}else {
 					body+=articleBean.getTitle()+"] 글에 좋아요를 눌렀습니다";
 				}
 			}else {
-				if(articleBean.getContents().length()>10) {
-					body+=articleBean.getContents().substring(0,  10)+"...] 글에 좋아요를 눌렀습니다";
+				if(articleBean.getContents().length()>20) {
+					body+=articleBean.getContents().substring(0, 20)+"...] 글에 좋아요를 눌렀습니다";
 				}else {
 					body+=articleBean.getContents()+"] 글에 좋아요를 눌렀습니다";
 				}

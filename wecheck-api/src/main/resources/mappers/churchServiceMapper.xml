@@ -35,6 +35,7 @@
   		WHERE	state = '1' and (now() &gt; endTime);
   	</update>
   	
+  	<!--  
   	<select id='getChurchService' parameterType="String" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
   		SELECT	*
 		FROM	churchService
@@ -46,5 +47,14 @@
 				FROM accessToken
 				WHERE accessTokenID = #{accessTokenID} ));
   	</select>
-  	
+	!-->
+	
+	<select id='getChurchService' parameterType="String" resultType = "org.afive.wecheck.churchService.ChurchServiceBean">
+  		SELECT	*
+		FROM	churchService
+		WHERE	(now() between DATE_SUB(startTime,INTERVAL 20 MINUTE) and endTime) and (regionID,unitID) IN(
+			SELECT	regionID,unitID
+			FROM	user)
+			
+  	</select>
 </mapper>

@@ -10,9 +10,11 @@
     </select>
     
     <select id="get" parameterType="String" resultType="org.afive.wecheck.user.bean.UserBean">
-    	SELECT	*
-    	FROM	user
-  		WHERE	userID = #{userID};
+		SELECT	A.*, region.regionName,unit.unitName
+		FROM	user A
+				inner join region on A.regionID = region.regionID
+				inner join unit on A.unitID = unit.unitID
+		WHERE	A.userID = #{userID};
     </select>
     
     <select id="getUserResult" parameterType = "String" resultType="org.afive.wecheck.user.bean.UserResult">
@@ -32,9 +34,17 @@
     	SELECT	user.userID
     	FROM	user,fcm
     	WHERE	user.userID = fcm.userID
+    </select>
+    
+    <!--
+    <select id="getIdByRegionAndUnit" parameterType="hashmap" resultType="String">
+    	SELECT	user.userID
+    	FROM	user,fcm
+    	WHERE	user.userID = fcm.userID
     	AND		regionID = #{regionID}
     	AND		unitID = #{unitID}	
     </select>
+    !-->
     
     <insert id="register" parameterType="org.afive.wecheck.user.bean.UserBean" useGeneratedKeys="true" keyProperty="userID">
     	INSERT INTO user 
@@ -42,6 +52,12 @@
     	VALUES
     		(#{snsType}, #{snsID})
     </insert>
+    
+    <update id="updateImageFile" parameterType="java.util.HashMap">
+    	UPDATE user
+    	SET profileImage = #{profileImage}
+    	WHERE userID = #{userID};
+    </update>
     
     <update id="update" parameterType="org.afive.wecheck.user.bean.UserBean">
     	UPDATE	user

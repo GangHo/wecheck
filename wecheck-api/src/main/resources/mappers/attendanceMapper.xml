@@ -35,6 +35,7 @@
   		AND		churchServiceID = #{churchServiceID};
   	</select>
   	
+  	<!-- last edited 2019/03/05 , 천복궁 예배에 한정해서 출석이 지역,소속 상관없이 나옴  -->
   	<select id="getAttendanceList" parameterType="hashmap" resultType = "org.afive.wecheck.attendance.AttendanceResult">
   		SELECT	attendance.attendanceID,
   				churchService.churchServiceID,
@@ -45,17 +46,12 @@
 		FROM	churchService
 		INNER JOIN region ON churchService.regionID = region.regionID
 		INNER JOIN unit ON churchService.unitID = unit.unitID
-		INNER JOIN user ON churchService.regionID = user.regionID
-			AND churchService.unitID = user.unitID 
-			AND user.userID = #{userID}
-			AND churchService.churchServiceID &lt; #{lastItemID}
-			AND (churchService.state = 1 OR churchService.state = 2 OR churchService.state = 3)
 		LEFT JOIN attendance ON attendance.churchServiceID = churchService.churchServiceID
 			AND attendance.userID = #{userID}
+		WHERE (churchService.state = 1 OR churchService.state = 2 OR churchService.state = 3)
+		AND	churchService.churchServiceID &lt; #{lastItemID}
 			order by startTime desc
 			limit #{size}
 			;
-			
   	</select>
-
 </mapper>

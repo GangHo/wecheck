@@ -89,7 +89,7 @@
     	FROM	comment
     	WHERE	(articleID = #{articleID}
     	AND		state = '0')
-    	order by registeredTime limit 1;
+    	order by registeredTime desc limit 1;
     </select>
 
   	

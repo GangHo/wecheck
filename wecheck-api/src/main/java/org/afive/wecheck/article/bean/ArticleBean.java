@@ -14,6 +14,7 @@ public class ArticleBean {
 	private String contents;
 	private int regionID;
 	private int unitID;
+	private String name; // edited 19-03-06 by gangho articleGroupID 에 대한 name
 	
 	public int getArticleID() {
 		return articleID;
@@ -87,7 +88,11 @@ public class ArticleBean {
 	public void setDeletedTime(String deletedTime) {
 		this.deletedTime = deletedTime;
 	}
-	
-	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }

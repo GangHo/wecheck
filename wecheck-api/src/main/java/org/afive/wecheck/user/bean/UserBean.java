@@ -20,6 +20,8 @@ public class UserBean {
 	private String registeredTime;
 	private int state;
 	private String deletedTime;
+	private String regionName;
+	private String unitName;
 	
 	private ArrayList snsLoginList;
 	
@@ -118,5 +120,17 @@ public class UserBean {
 	}
 	public String getDeletedTime() {
 		return deletedTime;
+	}
+	public String getRegionName() {
+		return regionName;
+	}
+	public String getUnitName() {
+		return unitName;
+	}
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
 	}
 }

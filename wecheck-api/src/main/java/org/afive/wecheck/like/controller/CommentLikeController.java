@@ -146,8 +146,8 @@ public class CommentLikeController {
 			String title = "좋아요가 눌렸어요 💕";
 			String body=userBean.getLastName()+" "+userBean.getFirstName()+"님께서 [";
 			
-			if(commentBean.getContents().length()>10) {
-				body+=commentBean.getContents().substring(0,  10)+"...] 댓글에 좋아요를 눌렀습니다";
+			if(commentBean.getContents().length()>20) {
+				body+=commentBean.getContents().substring(0,  20)+"...] 댓글에 좋아요를 눌렀습니다";
 			}else {
 				body+=commentBean.getContents()+"] 댓글에 좋아요를 눌렀습니다";
 			}
